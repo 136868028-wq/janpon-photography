@@ -1,0 +1,264 @@
+import Link from "next/link";
+import {
+  ArrowRight,
+  CalendarCheck2,
+  Camera,
+  CheckCircle2,
+  ShieldCheck,
+  Sparkles,
+  Wallet,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { SectionHeading } from "@/components/public/section-heading";
+import { ImageMock } from "@/components/shared/image-mock";
+import { BookingSteps } from "@/components/booking/booking-steps";
+import { DayStatusPill } from "@/components/booking/slot-status";
+import { mockImages, mockServices, mockPackages, mockPortfolio, mockReviews, FAQS } from "@/lib/mock-data";
+import { BOOKING_CODE_ALPHABET, BUSINESS } from "@/constants/booking";
+
+const BOOKING_POINTS = [
+  { icon: CalendarCheck2, title: "เลือกวันเวลาว่างเอง", desc: "เห็นคิวว่างแบบเรียลไทม์ ไม่ต้องโทรถาม" },
+  { icon: Wallet, title: "มัดจำ 500 บาท", desc: "ชำระผ่าน PromptPay และอัปโหลดสลิปในระบบ" },
+  { icon: ShieldCheck, title: "คิวถูกล็อก 10 นาที", desc: "ระหว่างชำระเงิน คิวของคุณจะปลอดภัย" },
+];
+
+export default function HomePage() {
+  return (
+    <>
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-coal text-white">
+        <div className="absolute inset-0" style={{ backgroundImage: mockImages.hero.gradient, opacity: 0.55 }} aria-hidden />
+        <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 py-16 sm:py-24 lg:flex-row lg:items-center">
+          <div className="max-w-xl">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">
+              <Sparkles className="size-3.5 text-brand" />
+              สตูดิโอถ่ายภาพครบวงจรในกรุงเทพฯ
+            </p>
+            <h1 className="mt-5 font-heading text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+              บันทึกทุกโมเมนต์
+              <br />
+              <span className="text-brand">สำคัญของคุณ</span>
+            </h1>
+            <p className="mt-4 text-base leading-relaxed text-white/70 sm:text-lg">
+              งานแต่ง รับปริญญา พอร์ต และอีเวนต์ — จองคิวออนไลน์ได้ทันที
+              ตรวจวันว่าง เลือกช่างภาพ และชำระมัดจำผ่าน PromptPay ในหน้าเดียว
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Link href="/book">
+                <Button size="lg" className="h-11 w-full bg-brand px-6 text-base font-bold text-brand-fg hover:bg-brand-strong sm:w-auto">
+                  จองคิวถ่ายภาพ <ArrowRight className="size-4" />
+                </Button>
+              </Link>
+              <Link href="/portfolio">
+                <Button size="lg" variant="outline" className="h-11 w-full border-white/25 bg-transparent px-6 text-base hover:bg-white/10 sm:w-auto">
+                  ดูผลงาน
+                </Button>
+              </Link>
+            </div>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/60">
+              <span>⭐ 4.9/5 จากรีวิวลูกค้า</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-4 text-brand" /> ยืนยันคิวภายใน 1 ชม.</span>
+              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-4 text-brand" /> จองล่วงหน้า 90 วัน</span>
+            </div>
+          </div>
+          <div className="w-full flex-1 lg:max-w-md">
+            <ImageMock image={mockImages.hero} aspect="aspect-[4/3]" className="shadow-2xl shadow-black/50" />
+            <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3 backdrop-blur">
+              <div className="flex items-center gap-2 text-sm">
+                <Camera className="size-4 text-brand" />
+                ตัวอย่างคิวว่างวันนี้
+              </div>
+              <DayStatusPill status="both_free" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <SectionHeading
+          eyebrow="บริการของเรา"
+          title="เลือกบริการที่ใช่สำหรับวันสำคัญของคุณ"
+          subtitle="ราคาโปร่งใส มัดจำเริ่มต้น 500 บาท จองออนไลน์ได้ 24 ชั่วโมง"
+        />
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {mockServices.map((service) => (
+            <Link key={service.id} href={`/services/${service.slug}`} className="group">
+              <Card className="h-full overflow-hidden transition-all group-hover:-translate-y-1 group-hover:border-brand/40 group-hover:shadow-lg">
+                <ImageMock image={service.image} rounded={false} aspect="aspect-[4/3]" className="rounded-t-xl" />
+                <CardContent className="p-4">
+                  <h3 className="font-heading text-base font-bold">{service.name}</h3>
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{service.description}</p>
+                  <p className="mt-3 text-sm">
+                    <span className="font-heading text-lg font-bold text-brand-strong">{service.basePrice.toLocaleString("th-TH")} บาท</span>
+                    <span className="text-xs text-muted-foreground"> · มัดจำ {service.deposit.toLocaleString("th-TH")} บาท</span>
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link href="/services">
+            <Button variant="outline" size="lg" className="h-10">ดูบริการทั้งหมด <ArrowRight className="size-4" /></Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Booking steps */}
+      <section className="bg-sand">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <SectionHeading
+            eyebrow="จองง่ายใน 6 ขั้นตอน"
+            title="จากเลือกบริการ ถึงยืนยันคิว ใช้เวลาไม่ถึง 5 นาที"
+          />
+          <div className="mx-auto mt-10 max-w-3xl">
+            <BookingSteps current={5} />
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {BOOKING_POINTS.map((point) => (
+                <div key={point.title} className="rounded-xl border bg-background p-5">
+                  <point.icon className="size-6 text-brand-strong" />
+                  <h3 className="mt-3 font-heading text-sm font-bold">{point.title}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{point.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio preview */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <SectionHeading
+            align="left"
+            eyebrow="ผลงานล่าสุด"
+            title="โมเมนต์จริงจากลูกค้าของเรา"
+          />
+          <Link href="/portfolio" className="text-sm font-semibold text-brand-strong hover:underline">
+            ดูผลงานทั้งหมด →
+          </Link>
+        </div>
+        <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {mockPortfolio.slice(0, 8).map((item) => (
+            <Link key={item.id} href="/portfolio" className="group">
+              <ImageMock image={item.image} aspect="aspect-[3/4]" className="transition-all group-hover:-translate-y-1 group-hover:shadow-lg" />
+              <p className="mt-2 text-xs font-medium">{item.title}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Packages preview */}
+      <section className="bg-coal text-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <SectionHeading
+            eyebrow="แพ็กเกจยอดนิยม"
+            title="เลือกแพ็กเกจที่เหมาะกับงบประมาณคุณ"
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {mockPackages.filter((p) => p.popular).map((pkg) => {
+              const service = mockServices.find((s) => s.slug === pkg.serviceSlug);
+              return (
+                <Card key={pkg.id} className="relative border-white/15 bg-white/5 text-white backdrop-blur">
+                  <span className="absolute -top-3 left-4 rounded-full bg-brand px-3 py-0.5 text-xs font-bold text-brand-fg">
+                    แพ็กเกจขายดี
+                  </span>
+                  <CardContent className="p-6">
+                    <p className="text-xs font-medium text-white/60">{service?.name}</p>
+                    <h3 className="mt-1 font-heading text-lg font-bold">{pkg.name}</h3>
+                    <p className="mt-2 text-sm text-white/60">{pkg.description}</p>
+                    <p className="mt-4">
+                      <span className="font-heading text-2xl font-extrabold text-brand">{pkg.price.toLocaleString("th-TH")}</span>
+                      <span className="text-sm text-white/60"> บาท</span>
+                    </p>
+                    <ul className="mt-4 space-y-2">
+                      {pkg.deliverables.map((d) => (
+                        <li key={d} className="flex items-center gap-2 text-xs text-white/70">
+                          <CheckCircle2 className="size-3.5 shrink-0 text-brand" /> {d}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href="/book" className="mt-5 block">
+                      <Button size="lg" className="h-10 w-full bg-brand text-brand-fg hover:bg-brand-strong">
+                        จองแพ็กเกจนี้
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews preview */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <SectionHeading eyebrow="เสียงจากลูกค้า" title="ลูกค้าไว้วางใจเราในทุกงาน" />
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {mockReviews.slice(0, 3).map((review) => (
+            <Card key={review.id}>
+              <CardContent className="p-5">
+                <div className="flex text-sm text-amber-500" aria-label={`${review.rating} ดาว`}>
+                  {"★".repeat(review.rating)}
+                  <span className="text-muted-foreground/40">{"★".repeat(5 - review.rating)}</span>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-foreground/90">“{review.comment}”</p>
+                <p className="mt-4 text-xs font-semibold">{review.customerName}</p>
+                <p className="text-xs text-muted-foreground">{review.service}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ preview */}
+      <section className="bg-sand">
+        <div className="mx-auto max-w-3xl px-4 py-16 sm:py-20">
+          <SectionHeading eyebrow="คำถามที่พบบ่อย" title="มีข้อสงสัยอะไร รวบรวมไว้ให้แล้ว" />
+          <div className="mt-8 space-y-3">
+            {FAQS.slice(0, 4).map((faq) => (
+              <details key={faq.q} className="group rounded-xl border bg-background p-4 open:shadow-sm">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+                  {faq.q}
+                  <span className="text-brand-strong transition-transform group-open:rotate-45">＋</span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
+              </details>
+            ))}
+          </div>
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            ยังมีคำถาม? <Link href="/faq" className="font-semibold text-brand-strong hover:underline">ดูคำถามทั้งหมด</Link>
+          </p>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <div className="relative overflow-hidden rounded-2xl bg-coal px-6 py-12 text-center text-white sm:py-16">
+          <div className="absolute inset-0" style={{ backgroundImage: mockImages.camera.gradient, opacity: 0.4 }} aria-hidden />
+          <div className="relative">
+            <h2 className="font-heading text-2xl font-extrabold sm:text-3xl">พร้อมเก็บความทรงจำครั้งสำคัญของคุณแล้วหรือยัง?</h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
+              คิวของเดือนนี้อาจเต็มเร็ว — เช็ควันว่างและจองได้เลยตอนนี้
+            </p>
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/book">
+                <Button size="lg" className="h-11 w-full bg-brand px-8 text-base font-bold text-brand-fg hover:bg-brand-strong sm:w-auto">
+                  จองเลย <ArrowRight className="size-4" />
+                </Button>
+              </Link>
+              <Link href="/availability">
+                <Button size="lg" variant="outline" className="h-11 w-full border-white/25 bg-transparent px-8 text-base hover:bg-white/10 sm:w-auto">
+                  ตรวจวันว่างก่อน
+                </Button>
+              </Link>
+            </div>
+            <p className="mt-4 text-xs text-white/50">รหัสจองของระบบ ตัวอย่าง: {BOOKING_CODE_ALPHABET.slice(0, 4)}-•••• • {BUSINESS.name}</p>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
