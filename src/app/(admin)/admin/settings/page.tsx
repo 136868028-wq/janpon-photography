@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ImageMock } from "@/components/shared/image-mock";
-import { mockPaymentSettings, mockImages } from "@/lib/mock-data";
+import { mockPaymentSettings, paymentQr } from "@/lib/mock-data";
 import { HOLD_DURATION_MINUTES, DEPOSIT_FALLBACK_THB, BUSINESS } from "@/constants/booking";
 
 export default function AdminSettingsPage() {
@@ -68,7 +68,7 @@ export default function AdminSettingsPage() {
               </p>
               <div className="mt-3 flex items-center gap-4">
                 <div className="w-28">
-                  <ImageMock image={mockImages.qr} aspect="aspect-square" className="border" />
+                  <ImageMock image={paymentQr} aspect="aspect-square" className="border" />
                 </div>
                 <div className="space-y-2">
                   <Button variant="outline" size="sm" className="h-9">อัปโหลด QR ใหม่</Button>

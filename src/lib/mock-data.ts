@@ -37,6 +37,9 @@ export const portfolioPhotos = {
   event2: p("/portfolio/event-2.jpg", "อีเวนต์"),
 } satisfies Record<string, MockImage>;
 
+/** Real PromptPay QR code used for the deposit step (public/qr/*). */
+export const paymentQr: MockImage = p("/qr/deposit-qr.jpg", "QR พร้อมเพย์ สำหรับชำระมัดจำ");
+
 export type MockService = {
   id: string;
   name: string;
@@ -449,7 +452,7 @@ export const mockPaymentSettings = {
   bankName: "ธ. กสิกรไทย",
   accountName: "นายเก่ง โพธิ์งาม",
   promptpayId: "081-234-5678",
-  qrImage: mockImages.qr,
+  qrImage: paymentQr,
   defaultDeposit: 500,
   isActive: true,
 };
