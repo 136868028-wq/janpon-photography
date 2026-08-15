@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         </div>
         <p className="mt-8 text-center text-sm text-muted-foreground">
           ติดต่อเจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล (DPO):{" "}
-          <a href="mailto:dpo@janpon.studio" className="font-semibold text-brand-strong hover:underline">dpo@janpon.studio</a>
+          <a href="mailto:dpo@starxpress.studio" className="font-semibold text-brand-strong hover:underline">dpo@starxpress.studio</a>
         </p>
         <div className="mt-4 text-center">
           <Button variant="outline">ดาวน์โหลดนโยบายฉบับเต็ม</Button>

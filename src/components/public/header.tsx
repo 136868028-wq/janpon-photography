@@ -26,7 +26,7 @@ export function PublicHeader() {
             <Camera className="size-5" />
           </span>
           <span className="font-heading text-lg font-bold tracking-tight">
-            แจนพอน <span className="text-brand-strong">สตูดิโอ</span>
+            Star X-Press <span className="text-brand-strong">Photo Studio</span>
           </span>
         </Link>
 

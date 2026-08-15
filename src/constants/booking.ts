@@ -126,11 +126,11 @@ export const DEPOSIT_FALLBACK_THB = 500;
 export const BOOKING_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 export const BUSINESS = {
-  name: "แจนพอน สตูดิโอ",
-  nameEn: "Janpon Studio",
+  name: "Star X-Press Photo Studio",
+  nameEn: "Star X-Press Photo Studio",
   phone: "08x-xxx-xxxx",
-  lineId: "@janpon.studio",
-  email: "hello@janpon.studio",
-  address: "กรุงเทพมหานคร",
+  lineId: "@starxpress.studio",
+  email: "hello@starxpress.studio",
+  address: "อ.ตากใบ จ.นราธิวาส 96110",
   openDays: "ทุกวัน 08:00 - 17:00 น.",
 };

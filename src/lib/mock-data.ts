@@ -1,12 +1,15 @@
 import type { BookingStatus, PaymentStatus, Role } from "@/constants/booking";
 
 export type MockImage = {
-  /** CSS gradient used as a stand-in photo for mockups */
-  gradient: string;
+  /** CSS gradient used as a stand-in photo for mockups (no image provided). */
+  gradient?: string;
+  /** Real photo path under /public when the image is provided by the studio. */
+  src?: string;
   caption: string;
 };
 
 const g = (a: string, b: string, caption: string): MockImage => ({ gradient: `linear-gradient(135deg, ${a}, ${b})`, caption });
+const p = (src: string, caption: string): MockImage => ({ src, caption });
 
 export const mockImages = {
   wedding: g("#7c4a3a", "#1d130f", "ภาพเจ้าบ่าวเจ้าสาว ณ โบสถ์"),
@@ -16,10 +19,22 @@ export const mockImages = {
   portfolio: g("#2b2b33", "#0e0e12", "พอร์ตโมเดล"),
   event: g("#543c2f", "#221510", "คอนเสิร์ต/อีเวนต์"),
   event2: g("#4a2f3d", "#1c0f16", "งานเปิดตัวสินค้า"),
-  hero: g("#0d0b09", "#4a2f1f", "สตูดิโอแจนพอน"),
+  hero: g("#0d0b09", "#4a2f1f", "Star X-Press Photo Studio"),
   camera: g("#1c1c22", "#0a0a0d", "อุปกรณ์ถ่ายภาพ"),
   qr: g("#ffffff", "#e8e4dc", "QR พร้อมเพย์"),
   slip: g("#f4f1ea", "#d8d2c4", "สลิปโอนเงินตัวอย่าง"),
+} satisfies Record<string, MockImage>;
+
+/** Real portfolio photos supplied by the studio (public/portfolio/*). */
+export const portfolioPhotos = {
+  wedding1: p("/portfolio/wedding-1.jpg", "งานแต่งงาน"),
+  wedding2: p("/portfolio/wedding-2.jpg", "งานแต่งงาน"),
+  portrait1: p("/portfolio/portrait-1.jpg", "พอร์ต"),
+  portrait2: p("/portfolio/portrait-2.jpg", "พอร์ต"),
+  graduation1: p("/portfolio/graduation-1.jpg", "รับปริญญา"),
+  graduation2: p("/portfolio/graduation-2.jpg", "รับปริญญา"),
+  event1: p("/portfolio/event-1.jpg", "อีเวนต์"),
+  event2: p("/portfolio/event-2.jpg", "อีเวนต์"),
 } satisfies Record<string, MockImage>;
 
 export type MockService = {
@@ -209,14 +224,14 @@ export type MockPortfolio = {
 };
 
 export const mockPortfolio: MockPortfolio[] = [
-  { id: "pf-1", title: "งานแต่ง อ้อม & เอิร์ธ", category: "wedding", image: mockImages.wedding, date: "2026-07-20" },
-  { id: "pf-2", title: "รับปริญญา ม.กรุงเทพ", category: "graduation", image: mockImages.grad, date: "2026-07-12" },
-  { id: "pf-3", title: "พอร์ตโมเดล ฟ้า", category: "portfolio", image: mockImages.portfolio, date: "2026-07-05" },
-  { id: "pf-4", title: "คอนเสิร์ต Night Fest", category: "event", image: mockImages.event, date: "2026-06-28" },
-  { id: "pf-5", title: "งานแต่ง มิน & เบียร์", category: "wedding", image: mockImages.wedding2, date: "2026-06-18" },
-  { id: "pf-6", title: "รับปริญญา ม.รังสิต", category: "graduation", image: mockImages.grad2, date: "2026-06-10" },
-  { id: "pf-7", title: "พอร์ตนางแบบ แพรว", category: "portfolio", image: mockImages.event2, date: "2026-05-30" },
-  { id: "pf-8", title: "เปิดตัวสินค้าใหม่", category: "event", image: mockImages.event2, date: "2026-05-22" },
+  { id: "pf-1", title: "งานแต่ง อ้อม & เอิร์ธ", category: "wedding", image: portfolioPhotos.wedding1, date: "2026-07-20" },
+  { id: "pf-2", title: "รับปริญญา ม.กรุงเทพ", category: "graduation", image: portfolioPhotos.graduation1, date: "2026-07-12" },
+  { id: "pf-3", title: "พอร์ตโมเดล ฟ้า", category: "portfolio", image: portfolioPhotos.portrait1, date: "2026-07-05" },
+  { id: "pf-4", title: "คอนเสิร์ต Night Fest", category: "event", image: portfolioPhotos.event1, date: "2026-06-28" },
+  { id: "pf-5", title: "งานแต่ง มิน & เบียร์", category: "wedding", image: portfolioPhotos.wedding2, date: "2026-06-18" },
+  { id: "pf-6", title: "รับปริญญา ม.รังสิต", category: "graduation", image: portfolioPhotos.graduation2, date: "2026-06-10" },
+  { id: "pf-7", title: "พอร์ตนางแบบ แพรว", category: "portfolio", image: portfolioPhotos.portrait2, date: "2026-05-30" },
+  { id: "pf-8", title: "เปิดตัวสินค้าใหม่", category: "event", image: portfolioPhotos.event2, date: "2026-05-22" },
   { id: "pf-9", title: "แต่งงานหมู่ บาบิลอน", category: "wedding", image: mockImages.wedding, date: "2026-05-14" },
 ];
 

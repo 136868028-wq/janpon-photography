@@ -63,7 +63,7 @@ export default function PortfolioPage() {
           </div>
         )}
         <p className={cn("mt-8 text-center text-sm text-muted-foreground")}>
-          ภาพทั้งหมดถ่ายโดยทีมงาน {`แจนพอน สตูดิโอ`} — ขออนุญาตลูกค้าแล้วทุกภาพ
+          ภาพทั้งหมดถ่ายโดยทีมงาน {`Star X-Press Photo Studio`} — ขออนุญาตลูกค้าแล้วทุกภาพ
         </p>
       </section>
     </>

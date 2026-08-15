@@ -28,9 +28,9 @@ export default function AboutPage() {
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <ImageMock image={mockImages.wedding} aspect="aspect-[4/3]" />
           <div>
-            <h2 className="font-heading text-2xl font-bold">แจนพอน สตูดิโอ</h2>
+            <h2 className="font-heading text-2xl font-bold">Star X-Press Photo Studio</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              เริ่มต้นจากช่างภาพคนเดียวกับกล้องตัวเดียวในย่านกรุงเทพฯ วันนี้เรากลายเป็นทีมช่างภาพ 3 คน
+              เริ่มต้นจากช่างภาพคนเดียวกับกล้องตัวเดียวที่ อ.ตากใบ จ.นราธิวาส วันนี้เรากลายเป็นทีมช่างภาพ 3 คน
               ที่ถ่ายภาพมากกว่า 2,000 งาน — ทั้งงานแต่ง รับปริญญา พอร์ต และอีเวนต์
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">

@@ -15,8 +15,8 @@ const notoSansThai = Noto_Sans_Thai({
 
 export const metadata: Metadata = {
   title: {
-    default: "แจนพอน สตูดิโอ | ถ่ายภาพ Wedding รับปริญญา Portfolio และ Event",
-    template: "%s | แจนพอน สตูดิโอ",
+    default: "Star X-Press Photo Studio | ถ่ายภาพ Wedding รับปริญญา Portfolio และ Event",
+    template: "%s | Star X-Press Photo Studio",
   },
   description:
     "จองคิวถ่ายภาพออนไลน์ ตรวจวันว่าง เลือกช่างภาพ และชำระมัดจำผ่าน PromptPay ได้ทันที — Wedding, รับปริญญา, Portfolio และ Event",

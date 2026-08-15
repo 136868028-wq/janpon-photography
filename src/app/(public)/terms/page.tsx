@@ -31,7 +31,7 @@ export default function TermsPage() {
         </div>
         <p className="mt-8 text-center text-sm text-muted-foreground">
           มีข้อสงสัยเกี่ยวกับข้อตกลง?{" "}
-          <a href="mailto:hello@janpon.studio" className="font-semibold text-brand-strong hover:underline">ติดต่อทีมงาน</a>
+          <a href="mailto:hello@starxpress.studio" className="font-semibold text-brand-strong hover:underline">ติดต่อทีมงาน</a>
         </p>
         <div className="mt-4 text-center">
           <Button variant="outline">ดาวน์โหลดข้อตกลงฉบับเต็ม</Button>

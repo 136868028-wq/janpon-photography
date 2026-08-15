@@ -33,7 +33,7 @@ export default function HomePage() {
           <div className="max-w-xl">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">
               <Sparkles className="size-3.5 text-brand" />
-              สตูดิโอถ่ายภาพครบวงจรในกรุงเทพฯ
+              สตูดิโอถ่ายภาพครบวงจร ณ อ.ตากใบ จ.นราธิวาส
             </p>
             <h1 className="mt-5 font-heading text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
               บันทึกทุกโมเมนต์
