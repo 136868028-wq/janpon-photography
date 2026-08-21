@@ -8,11 +8,15 @@ export function ImageMock({
   className,
   rounded = true,
   aspect = "aspect-[4/3]",
+  showCaption = true,
+  objectFit = "cover",
 }: {
   image: MockImage;
   className?: string;
   rounded?: boolean;
   aspect?: string;
+  showCaption?: boolean;
+  objectFit?: "cover" | "contain";
 }) {
   return (
     <div
@@ -30,8 +34,8 @@ export function ImageMock({
           src={image.src}
           alt={image.caption}
           fill
-          sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className={cn(objectFit === "contain" ? "object-contain" : "object-cover")}
         />
       ) : (
         <div
@@ -39,9 +43,11 @@ export function ImageMock({
           style={{ backgroundImage: image.gradient }}
         />
       )}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-10">
-        <p className="text-xs text-white/85 font-medium">{image.caption}</p>
-      </div>
+      {showCaption && image.caption ? (
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 pt-10">
+          <p className="text-xs text-white/85 font-medium">{image.caption}</p>
+        </div>
+      ) : null}
     </div>
   );
 }

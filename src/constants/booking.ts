@@ -90,16 +90,16 @@ export const ROLE_LABEL_TH: Record<Role, string> = {
 };
 
 /** V1 slot definitions — configurable in DB via availability_rules. */
-export const SLOT_MORNING = { start: "08:00", end: "12:00", label: "เช้า", rangeLabel: "08:00 - 12:00 น." };
-export const SLOT_EVENING = { start: "13:00", end: "17:00", label: "เย็น", rangeLabel: "13:00 - 17:00 น." };
+export const SLOT_MORNING = { start: "09:00", end: "13:00", label: "ช่วงเช้า", rangeLabel: "09:00 - 13:00 น." };
+export const SLOT_EVENING = { start: "13:00", end: "17:00", label: "ช่วงบ่าย", rangeLabel: "13:00 - 17:00 น." };
 
 /** Calendar day status — label is mandatory, color is supplementary. */
 export type DaySlotStatus = "both_free" | "morning_only" | "evening_only" | "full" | "closed" | "past";
 
 export const SLOT_STATUS_TEXT_TH: Record<DaySlotStatus, string> = {
-  both_free: "เช้า/เย็นว่าง",
-  morning_only: "เช้าว่าง",
-  evening_only: "เย็นว่าง",
+  both_free: "เช้า/บ่ายว่าง",
+  morning_only: "ช่วงเช้าว่าง",
+  evening_only: "ช่วงบ่ายว่าง",
   full: "เต็ม",
   closed: "ปิดรับจอง",
   past: "วันที่ผ่านมา",
@@ -132,5 +132,5 @@ export const BUSINESS = {
   lineId: "@starxpress.studio",
   email: "hello@starxpress.studio",
   address: "อ.ตากใบ จ.นราธิวาส 96110",
-  openDays: "ทุกวัน 08:00 - 17:00 น.",
+  openDays: "ทุกวัน 09:00 - 17:00 น.",
 };

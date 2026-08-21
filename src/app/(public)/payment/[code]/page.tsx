@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageMock } from "@/components/shared/image-mock";
 import { BookingStatusBadge, PaymentStatusBadge } from "@/components/shared/status-badge";
-import { mockBookings, mockPaymentSettings } from "@/lib/mock-data";
+import { mockBookings, mockPaymentSettings, getDepositQr } from "@/lib/mock-data";
 import { HOLD_DURATION_MINUTES, BUSINESS } from "@/constants/booking";
 
 export default function PaymentPage() {
@@ -107,14 +107,33 @@ export default function PaymentPage() {
                     {amount.toLocaleString("th-TH")} <span className="text-lg font-medium">บาท</span>
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">PromptPay / {mockPaymentSettings.bankName}</p>
-                  <div className="mx-auto mt-5 w-56">
-                    <ImageMock image={mockPaymentSettings.qrImage} aspect="aspect-square" className="border" />
+                  <div className="mx-auto mt-4 w-full max-w-[280px]">
+                    <ImageMock
+                      image={getDepositQr(booking.serviceName, amount)}
+                      aspect="aspect-[729/1024]"
+                      showCaption={false}
+                      objectFit="contain"
+                      className="rounded-xl border shadow-sm"
+                    />
                   </div>
                   <p className="mt-4 text-sm font-semibold">{mockPaymentSettings.accountName}</p>
-                  <p className="text-xs text-muted-foreground">เลขพร้อมเพย์ {mockPaymentSettings.promptpayId}</p>
-                  <Button size="sm" variant="outline" className="mt-4 h-8">
-                    <Download className="size-3.5" /> บันทึก QR
-                  </Button>
+                  <p className="text-xs text-muted-foreground">PromptPay · {mockPaymentSettings.bankName}</p>
+                  {getDepositQr(booking.serviceName, amount).src ? (
+                    <a
+                      href={getDepositQr(booking.serviceName, amount).src}
+                      download={`promptpay-deposit-${booking.code}-${amount}thb`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button size="sm" variant="outline" className="mt-4 h-8">
+                        <Download className="size-3.5" /> บันทึก QR
+                      </Button>
+                    </a>
+                  ) : (
+                    <Button size="sm" variant="outline" className="mt-4 h-8">
+                      <Download className="size-3.5" /> บันทึก QR
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 

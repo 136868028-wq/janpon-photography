@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ImageMock } from "@/components/shared/image-mock";
-import { mockPaymentSettings, paymentQr } from "@/lib/mock-data";
+import { mockPaymentSettings, depositQrs } from "@/lib/mock-data";
 import { HOLD_DURATION_MINUTES, DEPOSIT_FALLBACK_THB, BUSINESS } from "@/constants/booking";
 
 export default function AdminSettingsPage() {
@@ -52,7 +52,7 @@ export default function AdminSettingsPage() {
                 <Input id="set-name" defaultValue={mockPaymentSettings.accountName} />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="set-pp">เลขพร้อมเพย์</Label>
+                <Label htmlFor="set-pp">เลขพร้อมเพย์ / ช่องทาง</Label>
                 <Input id="set-pp" defaultValue={mockPaymentSettings.promptpayId} />
               </div>
               <div className="space-y-1.5">
@@ -62,20 +62,86 @@ export default function AdminSettingsPage() {
             </div>
             <Separator />
             <div>
-              <p className="text-sm font-semibold">QR สำหรับรับเงิน (แสดงให้ลูกค้าสแกนตอนชำระมัดจำ)</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                ใช้ QR เดียวสำหรับทุกรายการจอง (ตามสเปก Payment V1) — QR บันทึกแล้วเผยแพร่ผ่าน Storage
-              </p>
-              <div className="mt-3 flex items-center gap-4">
-                <div className="w-28">
-                  <ImageMock image={paymentQr} aspect="aspect-square" className="border" />
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold">QR พร้อมเพย์สำหรับรับเงินมัดจำ (แยกตามประเภทบริการ)</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    แสดงอัตโนมัติตามบริการที่ลูกค้าเลือกในการจอง
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="h-9">อัปโหลด QR ใหม่</Button>
-                  <label className="flex items-center gap-2 text-sm">
-                    <Switch checked={qrActive} onCheckedChange={setQrActive} aria-label="เปิดใช้งาน QR" />
-                    เปิดใช้งานช่องทางนี้
-                  </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <Switch checked={qrActive} onCheckedChange={setQrActive} aria-label="เปิดใช้งาน QR" />
+                  เปิดใช้งาน
+                </label>
+              </div>
+
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
+                  <div className="inline-flex rounded-full bg-blue-500/10 px-2 py-0.5 text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                    รูปที่ 1 · 500 บาท
+                  </div>
+                  <p className="text-xs font-semibold">ถ่ายรับปริญญา & ถ่ายพอร์ต</p>
+                  <div className="mx-auto w-28">
+                    <ImageMock
+                      image={depositQrs.gradAndPort}
+                      aspect="aspect-[729/1024]"
+                      showCaption={false}
+                      objectFit="contain"
+                      className="border shadow-sm"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">ธ.กรุงไทย · นายนุกมัน แบนอ</p>
+                </div>
+
+                <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
+                  <div className="inline-flex rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-bold text-rose-600 dark:text-rose-400">
+                    รูปที่ 2 · 1,000 บาท
+                  </div>
+                  <p className="text-xs font-semibold">งานแต่งงาน (ทั่วไป)</p>
+                  <div className="mx-auto w-28">
+                    <ImageMock
+                      image={depositQrs.wedding}
+                      aspect="aspect-[729/1024]"
+                      showCaption={false}
+                      objectFit="contain"
+                      className="border shadow-sm"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">ธ.กรุงไทย · นายนุกมัน แบนอ</p>
+                </div>
+
+                <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
+                  <div className="inline-flex rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                    พรีเมียม · 5,000 บาท
+                  </div>
+                  <p className="text-xs font-semibold">งานแต่งงาน (แพ็กเกจพรีเมียม)</p>
+                  <div className="mx-auto w-28">
+                    <ImageMock
+                      image={depositQrs.weddingPremium}
+                      aspect="aspect-[729/1024]"
+                      showCaption={false}
+                      objectFit="contain"
+                      className="border shadow-sm"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">ธ.กรุงไทย · นายนุกมัน แบนอ</p>
+                </div>
+
+                <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
+                  <div className="inline-flex rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">
+                    รูปที่ 3 · 1,500 บาท
+                  </div>
+                  <p className="text-xs font-semibold">งานอีเวนต์</p>
+                  <div className="mx-auto w-28">
+                    <ImageMock
+                      image={depositQrs.event}
+                      aspect="aspect-[729/1024]"
+                      showCaption={false}
+                      objectFit="contain"
+                      className="border shadow-sm"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">ธ.กรุงไทย · นายนุกมัน แบนอ</p>
                 </div>
               </div>
             </div>

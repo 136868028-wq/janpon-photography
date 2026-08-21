@@ -4,6 +4,7 @@ import {
   CalendarCheck2,
   Camera,
   CheckCircle2,
+  Clock,
   ShieldCheck,
   Sparkles,
   Wallet,
@@ -76,33 +77,118 @@ export default function HomePage() {
       </section>
 
       {/* Services */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-        <SectionHeading
-          eyebrow="บริการของเรา"
-          title="เลือกบริการที่ใช่สำหรับวันสำคัญของคุณ"
-          subtitle="ราคาโปร่งใส มัดจำเริ่มต้น 500 บาท จองออนไลน์ได้ 24 ชั่วโมง"
-        />
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {mockServices.map((service) => (
-            <Link key={service.id} href={`/services/${service.slug}`} className="group">
-              <Card className="h-full overflow-hidden transition-all group-hover:-translate-y-1 group-hover:border-brand/40 group-hover:shadow-lg">
-                <ImageMock image={service.image} rounded={false} aspect="aspect-[4/3]" className="rounded-t-xl" />
-                <CardContent className="p-4">
-                  <h3 className="font-heading text-base font-bold">{service.name}</h3>
-                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{service.description}</p>
-                  <p className="mt-3 text-sm">
-                    <span className="font-heading text-lg font-bold text-brand-strong">{service.basePrice.toLocaleString("th-TH")} บาท</span>
-                    <span className="text-xs text-muted-foreground"> · มัดจำ {service.deposit.toLocaleString("th-TH")} บาท</span>
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-8 text-center">
-          <Link href="/services">
-            <Button variant="outline" size="lg" className="h-10">ดูบริการทั้งหมด <ArrowRight className="size-4" /></Button>
+      <section className="relative mx-auto max-w-6xl px-4 py-16 sm:py-24">
+        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-semibold text-brand-strong">
+              <Sparkles className="size-3.5" /> บริการยอดนิยม
+            </span>
+            <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
+              เลือกบริการที่ใช่สำหรับวันสำคัญของคุณ
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+              มัดจำเริ่มต้น 500 บาท · เช็ควันว่างและจองคิวออนไลน์ได้ตลอด 24 ชั่วโมง
+            </p>
+          </div>
+          <Link href="/services" className="shrink-0">
+            <Button variant="outline" className="h-9 gap-1.5 text-xs font-semibold sm:h-10 sm:text-sm">
+              ดูบริการและแพ็กเกจทั้งหมด <ArrowRight className="size-4" />
+            </Button>
           </Link>
+        </div>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {mockServices.map((service) => (
+            <div
+              key={service.id}
+              className="group flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-brand/50 hover:shadow-xl"
+            >
+              {/* Image Thumbnail & Badges */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                <ImageMock
+                  image={service.image}
+                  rounded={false}
+                  aspect="aspect-[4/3]"
+                  showCaption={false}
+                  className="transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none" />
+
+                {/* Top Badges */}
+                <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
+                  {service.badge && (
+                    <span className="rounded-full border border-white/20 bg-black/60 px-2.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-md">
+                      {service.badge}
+                    </span>
+                  )}
+                  <span className="ml-auto rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-bold text-brand-fg shadow-sm">
+                    มัดจำ {service.deposit.toLocaleString("th-TH")} ฿
+                  </span>
+                </div>
+
+                {/* Title overlay at bottom of image */}
+                <div className="absolute inset-x-3 bottom-3 text-white">
+                  <h3 className="font-heading text-lg font-bold drop-shadow-sm">{service.name}</h3>
+                  <p className="flex items-center gap-1.5 text-xs text-white/80">
+                    <Clock className="size-3 text-brand" /> ประมาณ {service.durationMinutes} นาที
+                  </p>
+                </div>
+              </div>
+
+              {/* Card Body */}
+              <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
+                <div>
+                  <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                    {service.description}
+                  </p>
+
+                  {/* Highlights Tags */}
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {service.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+                      >
+                        ✓ {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Time Slot Info */}
+                  <div className="mt-3.5 flex items-center gap-1.5 rounded-lg bg-sand/60 px-2.5 py-1.5 text-[11px] text-muted-foreground">
+                    <Clock className="size-3.5 text-brand-strong shrink-0" />
+                    <span>ช่วงเช้า 09:00-13:00 / บ่าย 13:00-17:00</span>
+                  </div>
+                </div>
+
+                {/* Pricing & CTA */}
+                <div className="mt-5 border-t pt-4">
+                  <div className="flex items-baseline justify-between mb-3">
+                    <span className="text-xs text-muted-foreground">ราคาเริ่มต้น</span>
+                    <div>
+                      <span className="font-heading text-xl font-extrabold text-brand-strong">
+                        {service.basePrice.toLocaleString("th-TH")}
+                      </span>
+                      <span className="text-xs text-muted-foreground ml-1">บาท</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href={`/services/${service.slug}`} className="w-full">
+                      <Button variant="outline" size="sm" className="h-9 w-full text-xs">
+                        ดูแพ็กเกจ
+                      </Button>
+                    </Link>
+                    <Link href={`/book?service=${service.slug}`} className="w-full">
+                      <Button size="sm" className="h-9 w-full bg-brand text-xs font-bold text-brand-fg hover:bg-brand-strong">
+                        จองคิว <ArrowRight className="size-3 ml-0.5" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

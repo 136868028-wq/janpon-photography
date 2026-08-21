@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImageMock } from "@/components/shared/image-mock";
 import { BookingSteps } from "@/components/booking/booking-steps";
 import { SlotChip, DayStatusPill } from "@/components/booking/slot-status";
-import { mockServices, mockAvailabilityDays, mockPaymentSettings } from "@/lib/mock-data";
+import { mockServices, mockPackages, mockAvailabilityDays, mockPaymentSettings, getDepositQr } from "@/lib/mock-data";
 import { HOLD_DURATION_MINUTES, SLOT_MORNING, SLOT_EVENING, BUSINESS } from "@/constants/booking";
 import { cn } from "@/lib/utils";
 
@@ -46,12 +46,20 @@ function BookWizard() {
     const s = searchParams.get("service");
     return mockServices.find((x) => x.slug === s)?.id ?? mockServices[0].id;
   });
+  const [packageId, setPackageId] = useState<string | null>(() => searchParams.get("package"));
   const [date, setDate] = useState<string | null>(() => searchParams.get("date"));
   const [slot, setSlot] = useState<string | null>(null);
   const [customer, setCustomer] = useState({ fullName: "", phone: "", email: "", lineUserId: "", note: "" });
   const [paid, setPaid] = useState(false);
 
   const service = mockServices.find((s) => s.id === serviceId)!;
+  const availablePackages = useMemo(
+    () => mockPackages.filter((p) => p.serviceSlug === service.slug),
+    [service.slug],
+  );
+  const selectedPackage =
+    availablePackages.find((p) => p.id === packageId) ?? availablePackages[0];
+
   const selectedDay = mockAvailabilityDays.find((d) => d.date === date);
   const { minutes, seconds, secondsLeft } = useHoldCountdown(step === 5);
 
@@ -63,8 +71,17 @@ function BookWizard() {
   }, [step, date, slot, customer]);
 
   const bookingCode = "JN4M8T2W";
-  const totalPrice = service.basePrice;
-  const deposit = service.deposit;
+  const totalPrice = selectedPackage ? selectedPackage.price : service.basePrice;
+  const deposit = selectedPackage ? selectedPackage.deposit : service.deposit;
+
+  const handleSelectService = (id: string) => {
+    setServiceId(id);
+    const target = mockServices.find((s) => s.id === id);
+    if (target) {
+      const pkgs = mockPackages.filter((p) => p.serviceSlug === target.slug);
+      if (pkgs.length > 0) setPackageId(pkgs[0].id);
+    }
+  };
 
   const goTo = (next: WizardStep) => {
     if (step === 3 && next === 4) {
@@ -87,14 +104,14 @@ function BookWizard() {
           <CardContent className="p-5 sm:p-8">
             {step === 1 && (
               <div>
-                <h1 className="font-heading text-xl font-bold">เลือกบริการ</h1>
+                <h1 className="font-heading text-xl font-bold">เลือกบริการและแพ็กเกจ</h1>
                 <p className="mt-1 text-sm text-muted-foreground">มีคำถามเรื่องแพ็กเกจ? <Link href="/faq" className="font-semibold text-brand-strong hover:underline">อ่านคำถามที่พบบ่อย</Link></p>
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   {mockServices.map((s) => (
                     <button
                       key={s.id}
                       type="button"
-                      onClick={() => setServiceId(s.id)}
+                      onClick={() => handleSelectService(s.id)}
                       aria-pressed={serviceId === s.id}
                       className={cn(
                         "flex items-center gap-3 rounded-xl border p-3 text-left transition-all",
@@ -110,6 +127,49 @@ function BookWizard() {
                     </button>
                   ))}
                 </div>
+
+                {availablePackages.length > 0 && (
+                  <div className="mt-6">
+                    <p className="text-sm font-semibold">แพ็กเกจของ {service.name}</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                      {availablePackages.map((pkg) => (
+                        <button
+                          key={pkg.id}
+                          type="button"
+                          onClick={() => setPackageId(pkg.id)}
+                          aria-pressed={selectedPackage?.id === pkg.id}
+                          className={cn(
+                            "flex flex-col justify-between rounded-xl border p-4 text-left transition-all",
+                            selectedPackage?.id === pkg.id
+                              ? "border-brand bg-brand/5 ring-2 ring-brand/30"
+                              : "border-border hover:border-brand/40",
+                          )}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-1">
+                              <p className="text-sm font-bold">{pkg.name}</p>
+                              {pkg.popular && (
+                                <span className="rounded-full bg-brand px-2 py-0.5 text-[10px] font-bold text-brand-fg">
+                                  ยอดนิยม
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">{pkg.description}</p>
+                          </div>
+                          <div className="mt-3 border-t pt-2">
+                            <p className="text-base font-extrabold text-brand-strong">
+                              {pkg.price.toLocaleString("th-TH")}{" "}
+                              <span className="text-xs font-normal text-muted-foreground">บาท</span>
+                            </p>
+                            <p className="text-[11px] text-muted-foreground">
+                              มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท · {pkg.durationMinutes} นาที
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -152,7 +212,7 @@ function BookWizard() {
                           day.status === "full" && "text-red-600 dark:text-red-400",
                           day.status === "closed" && "text-muted-foreground",
                         )}>
-                          {day.status === "both_free" ? "เช้า/เย็นว่าง" : day.status === "morning_only" ? "เช้าว่าง" : day.status === "evening_only" ? "เย็นว่าง" : day.status === "full" ? "เต็ม" : "ปิด"}
+                          {day.status === "both_free" ? "เช้า/บ่ายว่าง" : day.status === "morning_only" ? "ช่วงเช้าว่าง" : day.status === "evening_only" ? "ช่วงบ่ายว่าง" : day.status === "full" ? "เต็ม" : "ปิด"}
                         </span>
                       </button>
                     );
@@ -165,14 +225,14 @@ function BookWizard() {
                     </p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <SlotChip
-                        label={`เช้า (${SLOT_MORNING.label})`}
+                        label={SLOT_MORNING.label}
                         range={SLOT_MORNING.rangeLabel}
                         selected={slot === "morning"}
                         disabled={selectedDay.status === "evening_only" || selectedDay.status === "full"}
                         onSelect={() => setSlot("morning")}
                       />
                       <SlotChip
-                        label={`เย็น (${SLOT_EVENING.label})`}
+                        label={SLOT_EVENING.label}
                         range={SLOT_EVENING.rangeLabel}
                         selected={slot === "evening"}
                         disabled={selectedDay.status === "morning_only" || selectedDay.status === "full"}
@@ -229,7 +289,8 @@ function BookWizard() {
                 <dl className="mt-5 divide-y rounded-xl border">
                   {[
                     ["บริการ", service.name],
-                    ["ช่วงเวลา", date && selectedDay ? `${selectedDay.dayName} ${Number(date.slice(-2))} ${THAI_MONTHS[Number(date.slice(5, 7)) - 1]} · ${slot === "morning" ? "เช้า" : "เย็น"} (${slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel})` : "-"],
+                    ["แพ็กเกจ", selectedPackage ? selectedPackage.name : "-"],
+                    ["ช่วงเวลา", date && selectedDay ? `${selectedDay.dayName} ${Number(date.slice(-2))} ${THAI_MONTHS[Number(date.slice(5, 7)) - 1]} · ${slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label} (${slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel})` : "-"],
                     ["ชื่อผู้จอง", customer.fullName],
                     ["เบอร์โทร", customer.phone],
                     ["อีเมล", customer.email || "-"],
@@ -282,19 +343,43 @@ function BookWizard() {
                 )}
 
                 <div className="mx-auto mt-5 max-w-sm">
-                  <div className="relative overflow-hidden rounded-2xl border bg-white p-6">
-                    <p className="text-3xl font-extrabold tracking-tight">{deposit.toLocaleString("th-TH")} <span className="text-base font-medium">บาท</span></p>
-                    <p className="mt-1 text-xs text-muted-foreground">PromptPay / {mockPaymentSettings.bankName}</p>
-                    <div className="mx-auto mt-4 w-52">
-                      <ImageMock image={mockPaymentSettings.qrImage} aspect="aspect-square" className="border" />
+                  <div className="relative overflow-hidden rounded-2xl border bg-white p-4 shadow-sm">
+                    <div className="mx-auto w-full max-w-[280px]">
+                      <ImageMock
+                        image={getDepositQr(service.slug, deposit)}
+                        aspect="aspect-[729/1024]"
+                        showCaption={false}
+                        objectFit="contain"
+                        className="rounded-xl border shadow-sm"
+                      />
                     </div>
-                    <p className="mt-3 text-sm font-semibold">{mockPaymentSettings.accountName}</p>
-                    <p className="text-xs text-muted-foreground">เลขพร้อมเพย์ {mockPaymentSettings.promptpayId}</p>
-                    <p className="mt-2 text-[11px] text-muted-foreground">ชำระแล้วโอนสลิปให้ระบบตรวจสอบในขั้นตอนถัดไป</p>
+                    <div className="mt-3 text-center">
+                      <p className="text-xs font-medium text-foreground">
+                        PromptPay / {mockPaymentSettings.bankName} · {mockPaymentSettings.accountName}
+                      </p>
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        สแกน QR ผ่านแอปธนาคารใดก็ได้เพื่อชำระเงินมัดจำ {deposit.toLocaleString("th-TH")} บาท
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center justify-between rounded-xl border p-3 text-left text-sm">
-                    <span className="text-muted-foreground">บันทึก QR ไว้ได้</span>
-                    <Button size="sm" variant="outline" className="h-8"><Download className="size-3.5" /> บันทึก</Button>
+                  <div className="mt-3 flex items-center justify-between rounded-xl border bg-card p-3 text-left text-sm">
+                    <span className="text-muted-foreground">บันทึก QR ไว้สแกน</span>
+                    {getDepositQr(service.slug, deposit).src ? (
+                      <a
+                        href={getDepositQr(service.slug, deposit).src}
+                        download={`promptpay-deposit-${service.slug}-${deposit}thb`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button size="sm" variant="outline" className="h-8">
+                          <Download className="size-3.5" /> บันทึก QR
+                        </Button>
+                      </a>
+                    ) : (
+                      <Button size="sm" variant="outline" className="h-8">
+                        <Download className="size-3.5" /> บันทึก QR
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -344,7 +429,10 @@ function BookWizard() {
                 </p>
                 <div className="mx-auto mt-6 max-w-sm rounded-xl border bg-sand p-4 text-left text-sm">
                   <div className="flex justify-between py-1"><span className="text-muted-foreground">บริการ</span><span className="font-medium">{service.name}</span></div>
-                  <div className="flex justify-between py-1"><span className="text-muted-foreground">วันเวลา</span><span className="font-medium">{slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel} ({slot === "morning" ? "เช้า" : "เย็น"})</span></div>
+                  {selectedPackage && (
+                    <div className="flex justify-between py-1"><span className="text-muted-foreground">แพ็กเกจ</span><span className="font-medium">{selectedPackage.name}</span></div>
+                  )}
+                  <div className="flex justify-between py-1"><span className="text-muted-foreground">วันเวลา</span><span className="font-medium">{slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel} ({slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label})</span></div>
                   <div className="flex justify-between py-1"><span className="text-muted-foreground">มัดจำ</span><span className="font-medium">{deposit.toLocaleString("th-TH")} บาท</span></div>
                   <div className="flex justify-between py-1"><span className="text-muted-foreground">สถานะ</span><span className="font-medium text-sky-600 dark:text-sky-400">รอตรวจสอบหลักฐาน</span></div>
                 </div>
@@ -373,7 +461,8 @@ function BookWizard() {
                 ) : (
                   <p className="truncate">
                     <span className="font-semibold">{service.name}</span>
-                    {date && <span className="text-muted-foreground"> · {slot === "morning" ? "เช้า" : "เย็น"}</span>}
+                    {selectedPackage && <span className="text-muted-foreground"> ({selectedPackage.name})</span>}
+                    {date && <span className="text-muted-foreground"> · {slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label}</span>}
                     <span className="text-muted-foreground"> · มัดจำ {deposit.toLocaleString("th-TH")} บาท</span>
                   </p>
                 )}

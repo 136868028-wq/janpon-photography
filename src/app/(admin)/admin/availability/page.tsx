@@ -116,7 +116,7 @@ export default function AdminAvailabilityPage() {
                   <SelectTrigger id="block-from"><SelectValue placeholder="ทั้งวัน" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">ทั้งวัน</SelectItem>
-                    <SelectItem value="08-12">08:00 - 12:00</SelectItem>
+                    <SelectItem value="09-13">09:00 - 13:00</SelectItem>
                     <SelectItem value="13-17">13:00 - 17:00</SelectItem>
                   </SelectContent>
                 </Select>
