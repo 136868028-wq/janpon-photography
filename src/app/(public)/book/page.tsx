@@ -59,6 +59,22 @@ function BookWizard() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [uploadingSlip, setUploadingSlip] = useState<boolean>(false);
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("starxpress_customer");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setCustomer((prev) => ({
+          ...prev,
+          fullName: prev.fullName || parsed.fullName || "",
+          phone: prev.phone || parsed.phone || "",
+        }));
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   const service = mockServices.find((s) => s.id === serviceId)!;
   const availablePackages = useMemo(
     () => mockPackages.filter((p) => p.serviceSlug === service.slug),
@@ -73,7 +89,7 @@ function BookWizard() {
   const canContinue = useMemo(() => {
     if (step === 1) return true;
     if (step === 2) return Boolean(date && slot);
-    if (step === 3) return customer.fullName.trim().length > 0 && customer.phone.trim().length >= 9 && photoConsent !== null;
+    if (step === 3) return Boolean(customer.fullName.trim() && customer.phone.trim() && photoConsent !== null);
     return true;
   }, [step, date, slot, customer, photoConsent]);
 
@@ -126,9 +142,16 @@ function BookWizard() {
           } catch {
             // ignore
           }
+        } else {
+          alert("ไม่สามารถบันทึกการจองได้: " + (res.error || "กรุณาลองใหม่อีกครั้ง"));
+          setIsSubmitting(false);
+          return;
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Booking error:", err);
+        alert("เกิดข้อผิดพลาด: " + (err?.message || "ไม่สามารถเชื่อมต่อฐานข้อมูลได้"));
+        setIsSubmitting(false);
+        return;
       } finally {
         setIsSubmitting(false);
       }

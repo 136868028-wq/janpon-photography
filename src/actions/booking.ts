@@ -99,9 +99,7 @@ export async function getCustomerBookingsByPhoneAction(phone: string) {
   try {
     const supabase = await createServerSupabaseClient();
     const cleanDigits = phone.replace(/[^0-9]/g, "");
-    const last9 = cleanDigits.length >= 9 ? cleanDigits.slice(-9) : cleanDigits;
 
-    // Fetch all bookings and match by digits in JS to guarantee 100% matches regardless of dashes/spaces
     const { data, error } = await supabase
       .from("bookings")
       .select("*, payments(*)")
@@ -112,14 +110,35 @@ export async function getCustomerBookingsByPhoneAction(phone: string) {
     const matched = (data || []).filter((b: any) => {
       const bDigits = (b.customer_phone || "").replace(/[^0-9]/g, "");
       if (!bDigits || !cleanDigits) return false;
+      const last8 = cleanDigits.length >= 8 ? cleanDigits.slice(-8) : cleanDigits;
+      const bLast8 = bDigits.length >= 8 ? bDigits.slice(-8) : bDigits;
+
       return (
+        bDigits === cleanDigits ||
         bDigits.includes(cleanDigits) ||
         cleanDigits.includes(bDigits) ||
-        (last9 && bDigits.includes(last9))
+        (last8 && bDigits.includes(last8)) ||
+        (bLast8 && cleanDigits.includes(bLast8))
       );
     });
 
     return { success: true, bookings: matched };
+  } catch (err: any) {
+    return { success: false, error: err?.message, bookings: [] };
+  }
+}
+
+export async function getAllRecentPublicBookingsAction() {
+  try {
+    const supabase = await createServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("bookings")
+      .select("id, code, customer_name, customer_phone, service_name, date, slot, status, deposit_amount, created_at")
+      .order("created_at", { ascending: false })
+      .limit(6);
+
+    if (error) return { success: false, error: error.message, bookings: [] };
+    return { success: true, bookings: data || [] };
   } catch (err: any) {
     return { success: false, error: err?.message, bookings: [] };
   }
