@@ -22,13 +22,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImageMock } from "@/components/shared/image-mock";
 import { BookingSteps } from "@/components/booking/booking-steps";
 import { SlotChip, DayStatusPill } from "@/components/booking/slot-status";
-import { mockServices, mockPackages, mockAvailabilityDays, mockPaymentSettings, getDepositQr } from "@/lib/mock-data";
+import { ThaiBookingCalendar } from "@/components/booking/thai-calendar";
+import { mockServices, mockPackages, mockPaymentSettings, getDepositQr } from "@/lib/mock-data";
+import { formatThaiDate, getDayAvailability } from "@/lib/thai-calendar";
 import { HOLD_DURATION_MINUTES, SLOT_MORNING, SLOT_EVENING, BUSINESS } from "@/constants/booking";
 import { cn } from "@/lib/utils";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
-
-const THAI_MONTHS = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
 
 export default function BookPage() {
   return (
@@ -60,7 +60,7 @@ function BookWizard() {
   const selectedPackage =
     availablePackages.find((p) => p.id === packageId) ?? availablePackages[0];
 
-  const selectedDay = mockAvailabilityDays.find((d) => d.date === date);
+  const selectedDay = date ? getDayAvailability(date) : null;
   const { minutes, seconds, secondsLeft } = useHoldCountdown(step === 5);
 
   const canContinue = useMemo(() => {
@@ -176,65 +176,53 @@ function BookWizard() {
               <div>
                 <h1 className="font-heading text-xl font-bold">เลือกวันและเวลา</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  บริการ: <span className="font-semibold">{service.name}</span> · สถานะคิวอัปเดตแบบเรียลไทม์
+                  บริการ: <span className="font-semibold text-foreground">{service.name}</span> · เลือกวันที่ต้องการจากปฏิทินไทย 12 เดือน (วันที่ 1 - 31)
                 </p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  <DayStatusPill status="both_free" />
-                  <DayStatusPill status="morning_only" />
-                  <DayStatusPill status="evening_only" />
-                  <DayStatusPill status="full" />
-                  <DayStatusPill status="closed" />
+
+                <div className="mt-5">
+                  <ThaiBookingCalendar
+                    selectedDate={date}
+                    onSelectDate={(newDate) => {
+                      setDate(newDate);
+                      setSlot(null);
+                    }}
+                  />
                 </div>
-                <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-                  {mockAvailabilityDays.map((day) => {
-                    const disabled = day.status === "past" || day.status === "closed" || day.status === "full";
-                    return (
-                      <button
-                        key={day.date}
-                        type="button"
-                        disabled={disabled}
-                        onClick={() => { setDate(day.date); setSlot(null); }}
-                        aria-pressed={date === day.date}
-                        className={cn(
-                          "flex min-h-16 flex-col items-center justify-center gap-0.5 rounded-lg border p-1.5 text-center transition-all",
-                          date === day.date ? "border-brand bg-brand/10 ring-2 ring-brand/30" : "border-border hover:border-brand/40",
-                          disabled && "cursor-not-allowed opacity-40 hover:border-border",
-                        )}
-                      >
-                        <span className="text-[11px] text-muted-foreground">{day.dayName}</span>
-                        <span className="text-sm font-bold">{Number(day.date.slice(-2))} {THAI_MONTHS[Number(day.date.slice(5, 7)) - 1]}</span>
-                        <span className={cn(
-                          "text-[10px] font-medium",
-                          day.status === "both_free" && "text-emerald-600 dark:text-emerald-400",
-                          day.status === "morning_only" && "text-sky-600 dark:text-sky-400",
-                          day.status === "evening_only" && "text-violet-600 dark:text-violet-400",
-                          day.status === "full" && "text-red-600 dark:text-red-400",
-                          day.status === "closed" && "text-muted-foreground",
-                        )}>
-                          {day.status === "both_free" ? "เช้า/บ่ายว่าง" : day.status === "morning_only" ? "ช่วงเช้าว่าง" : day.status === "evening_only" ? "ช่วงบ่ายว่าง" : day.status === "full" ? "เต็ม" : "ปิด"}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+
                 {date && selectedDay && (
-                  <div className="mt-6">
-                    <p className="text-sm font-semibold">
-                      เลือกช่วงเวลา · <span className="text-muted-foreground">{Number(date.slice(-2))} {THAI_MONTHS[Number(date.slice(5, 7)) - 1]}</span>
-                    </p>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div className="mt-6 rounded-2xl border bg-sand/40 p-4 sm:p-5">
+                    <div className="flex items-center gap-2">
+                      <Clock className="size-5 text-brand-strong" />
+                      <div>
+                        <p className="text-sm font-bold">เลือกช่วงเวลาสำหรับวันที่เลือก</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatThaiDate(date, "full")}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
                       <SlotChip
                         label={SLOT_MORNING.label}
                         range={SLOT_MORNING.rangeLabel}
                         selected={slot === "morning"}
-                        disabled={selectedDay.status === "evening_only" || selectedDay.status === "full"}
+                        disabled={
+                          selectedDay.status === "evening_only" ||
+                          selectedDay.status === "full" ||
+                          selectedDay.status === "closed" ||
+                          selectedDay.status === "past"
+                        }
                         onSelect={() => setSlot("morning")}
                       />
                       <SlotChip
                         label={SLOT_EVENING.label}
                         range={SLOT_EVENING.rangeLabel}
                         selected={slot === "evening"}
-                        disabled={selectedDay.status === "morning_only" || selectedDay.status === "full"}
+                        disabled={
+                          selectedDay.status === "morning_only" ||
+                          selectedDay.status === "full" ||
+                          selectedDay.status === "closed" ||
+                          selectedDay.status === "past"
+                        }
                         onSelect={() => setSlot("evening")}
                       />
                     </div>
@@ -289,7 +277,7 @@ function BookWizard() {
                   {[
                     ["บริการ", service.name],
                     ["แพ็กเกจ", selectedPackage ? selectedPackage.name : "-"],
-                    ["ช่วงเวลา", date && selectedDay ? `${selectedDay.dayName} ${Number(date.slice(-2))} ${THAI_MONTHS[Number(date.slice(5, 7)) - 1]} · ${slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label} (${slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel})` : "-"],
+                    ["ช่วงเวลา", date ? `${formatThaiDate(date, "full")} · ${slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label} (${slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel})` : "-"],
                     ["ชื่อผู้จอง", customer.fullName],
                     ["เบอร์โทร", customer.phone],
                     ["อีเมล", customer.email || "-"],
