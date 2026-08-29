@@ -28,6 +28,7 @@ import { ThaiBookingCalendar } from "@/components/booking/thai-calendar";
 import { mockServices, mockPackages, mockPaymentSettings, getDepositQr } from "@/lib/mock-data";
 import { formatThaiDate, getDayAvailability } from "@/lib/thai-calendar";
 import { HOLD_DURATION_MINUTES, SLOT_MORNING, SLOT_EVENING, SLOT_FULLDAY, BUSINESS } from "@/constants/booking";
+import { createBookingAction, uploadSlipAction } from "@/actions/booking";
 import { cn } from "@/lib/utils";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
@@ -54,6 +55,9 @@ function BookWizard() {
   const [customer, setCustomer] = useState({ fullName: "", phone: "", email: "", lineUserId: "", note: "" });
   const [photoConsent, setPhotoConsent] = useState<boolean | null>(null);
   const [paid, setPaid] = useState(false);
+  const [bookingCode, setBookingCode] = useState<string>("SX" + Math.random().toString(36).substring(2, 8).toUpperCase());
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [uploadingSlip, setUploadingSlip] = useState<boolean>(false);
 
   const service = mockServices.find((s) => s.id === serviceId)!;
   const availablePackages = useMemo(
@@ -73,7 +77,6 @@ function BookWizard() {
     return true;
   }, [step, date, slot, customer, photoConsent]);
 
-  const bookingCode = "JN4M8T2W";
   const totalPrice = selectedPackage ? selectedPackage.price : service.basePrice;
   const deposit = selectedPackage ? selectedPackage.deposit : service.deposit;
 
@@ -86,11 +89,32 @@ function BookWizard() {
     }
   };
 
-  const goTo = (next: WizardStep) => {
-    if (step === 3 && next === 4) {
-      // mock: ล็อกคิวชั่วคราวเมื่อกดไปชำระเงิน
-      setStep(4);
-      return;
+  const goTo = async (next: WizardStep) => {
+    if (step === 4 && next === 5) {
+      setIsSubmitting(true);
+      try {
+        const res = await createBookingAction({
+          serviceName: service.name,
+          packageName: selectedPackage ? selectedPackage.name : undefined,
+          date: date!,
+          slot: slot!,
+          totalPrice,
+          depositAmount: deposit,
+          customerName: customer.fullName,
+          customerPhone: customer.phone,
+          customerEmail: customer.email || undefined,
+          customerLine: customer.lineUserId || undefined,
+          customerNote: customer.note || undefined,
+          photoConsent: photoConsent === true,
+        });
+        if (res.success && res.code) {
+          setBookingCode(res.code);
+        }
+      } catch (err) {
+        console.error("Booking error:", err);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
     setStep(next);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -452,17 +476,36 @@ function BookWizard() {
                     <Upload className="mx-auto size-8 text-muted-foreground" />
                     <p className="mt-2 text-sm font-semibold">อัปโหลดสลิปการชำระเงิน</p>
                     <p className="text-xs text-muted-foreground">PNG/JPG/PDF ไม่เกิน 5 MB</p>
-                    <label className="mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-coal py-2.5 text-sm font-semibold text-white">
-                      <FileUp className="size-4" /> เลือกไฟล์สลิป
+                    <label className="mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-coal py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                      <FileUp className="size-4" /> {uploadingSlip ? "กำลังอัปโหลดสลิป..." : "เลือกไฟล์สลิป"}
                       <input
                         type="file"
                         accept="image/png,image/jpeg,application/pdf"
+                        disabled={uploadingSlip}
                         className="sr-only"
-                        onChange={() => { setPaid(true); }}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setUploadingSlip(true);
+                            const reader = new FileReader();
+                            reader.onload = async (ev) => {
+                              const dataUrl = ev.target?.result as string;
+                              try {
+                                await uploadSlipAction(bookingCode, dataUrl);
+                              } catch (err) {
+                                console.error("Slip upload error:", err);
+                              } finally {
+                                setUploadingSlip(false);
+                                setPaid(true);
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
                       />
                     </label>
                     <p className="mt-3 text-xs text-muted-foreground">
-                      เมื่ออัปโหลดแล้ว ระบบจะส่งหลักฐานให้แอดมินตรวจสอบ — การยืนยันคิวจะแจ้งหลังตรวจสอบแล้วเท่านั้น
+                      เมื่ออัปโหลดแล้ว ระบบจะบันทึกหลักฐานลงฐานข้อมูลเพื่อให้แอดมินตรวจสอบ
                     </p>
                   </div>
                 ) : (
@@ -543,8 +586,8 @@ function BookWizard() {
                   </Button>
                 )}
                 {step === 4 && (
-                  <Button size="lg" className="h-10 bg-brand px-6 text-brand-fg hover:bg-brand-strong" onClick={() => goTo(5)}>
-                    <Sparkles className="size-4" /> ล็อกคิวและไปชำระเงิน
+                  <Button size="lg" className="h-10 bg-brand px-6 text-brand-fg hover:bg-brand-strong" disabled={isSubmitting} onClick={() => goTo(5)}>
+                    <Sparkles className="size-4" /> {isSubmitting ? "กำลังล็อกคิว..." : "ล็อกคิวและไปชำระเงิน"}
                   </Button>
                 )}
                 {step === 5 && !paid && (

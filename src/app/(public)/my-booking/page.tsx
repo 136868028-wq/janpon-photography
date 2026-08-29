@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/public/page-header";
 import { mockBookings } from "@/lib/mock-data";
+import { getBookingByCodeAction } from "@/actions/booking";
 
 export default function MyBookingPage() {
   const router = useRouter();
@@ -18,17 +19,41 @@ export default function MyBookingPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     const normalized = code.trim().toUpperCase();
-    const match = mockBookings.find((b) => b.code === normalized);
-    setTimeout(() => {
+
+    try {
+      // 1. Check Supabase DB
+      const res = await getBookingByCodeAction(normalized);
+      if (res.success && res.booking) {
+        const cleanInputPhone = phone.replace(/[^0-9]/g, "");
+        const cleanDbPhone = (res.booking.customer_phone || "").replace(/[^0-9]/g, "");
+
+        if (!cleanInputPhone || cleanDbPhone.includes(cleanInputPhone) || cleanInputPhone.includes(cleanDbPhone)) {
+          router.push(`/booking/${normalized}`);
+          return;
+        } else {
+          setError("เบอร์โทรศัพท์ไม่ตรงกับข้อมูลในระบบ กรุณาตรวจสอบอีกครั้ง");
+          setLoading(false);
+          return;
+        }
+      }
+
+      // 2. Check Mock Data
+      const match = mockBookings.find((b) => b.code === normalized);
+      if (match) {
+        router.push(`/booking/${normalized}`);
+      } else {
+        setError("ไม่พบการจอง กรุณาตรวจสอบรหัสและเบอร์โทรอีกครั้ง");
+      }
+    } catch {
+      setError("เกิดข้อผิดพลาดในการค้นหา กรุณาลองใหม่อีกครั้ง");
+    } finally {
       setLoading(false);
-      if (match) router.push(`/booking/${normalized}`);
-      else setError("ไม่พบการจอง กรุณาตรวจสอบรหัสและเบอร์โทรอีกครั้ง");
-    }, 600);
+    }
   };
 
   return (
@@ -36,7 +61,7 @@ export default function MyBookingPage() {
       <PageHeader
         eyebrow="ค้นหาการจอง"
         title="เช็คสถานะการจองของคุณ"
-        subtitle="กรอกเบอร์โทรและรหัสการจอง (อยู่บนอีเมล/หน้าใบยืนยันการจอง)"
+        subtitle="กรอกเบอร์โทรและรหัสการจอง (บันทึกในระบบฐานข้อมูล Supabase)"
       />
       <section className="mx-auto max-w-xl px-4 py-12">
         <Card>
@@ -46,11 +71,11 @@ export default function MyBookingPage() {
                 <Label htmlFor="lookup-code">รหัสการจอง</Label>
                 <Input
                   id="lookup-code"
-                  placeholder="เช่น JN4M8T2W"
+                  placeholder="เช่น SX7M8T2W"
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
                   className="font-mono text-lg tracking-widest uppercase"
-                  maxLength={8}
+                  maxLength={10}
                   required
                 />
               </div>
@@ -70,13 +95,13 @@ export default function MyBookingPage() {
                   {error}
                 </p>
               )}
-              <Button size="lg" className="h-10 w-full bg-brand text-brand-fg hover:bg-brand-strong" disabled={loading}>
-                <Search className="size-4" /> {loading ? "กำลังค้นหา..." : "ค้นหาการจอง"}
+              <Button size="lg" className="h-10 w-full bg-brand text-brand-fg hover:bg-brand-strong font-bold" disabled={loading}>
+                <Search className="size-4" /> {loading ? "กำลังค้นหาในฐานข้อมูล..." : "ค้นหาการจอง"}
               </Button>
             </form>
             <div className="mt-5 space-y-3 border-t pt-5">
               <p className="flex items-center gap-2 text-sm font-semibold">
-                <Ticket className="size-4 text-brand-strong" /> ลองดูตัวอย่าง
+                <Ticket className="size-4 text-brand-strong" /> ตัวอย่างรหัสการจอง
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {mockBookings.slice(0, 4).map((b) => (
@@ -98,9 +123,6 @@ export default function MyBookingPage() {
             </p>
           </CardContent>
         </Card>
-        <p className="mt-5 text-center text-sm text-muted-foreground">
-          ไม่พบการจอง? <Link href="/contact" className="font-semibold text-brand-strong hover:underline">ติดต่อทีมงาน</Link>
-        </p>
       </section>
     </>
   );

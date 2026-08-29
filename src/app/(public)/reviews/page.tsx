@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PageHeader } from "@/components/public/page-header";
 import { SectionHeading } from "@/components/public/section-heading";
-import { MockReview, mockReviews } from "@/lib/mock-data";
+import { MockReview } from "@/lib/mock-data";
+import { submitReviewAction, getPublishedReviewsAction } from "@/actions/reviews";
 import { cn } from "@/lib/utils";
 
 const SERVICES_OPTIONS = [
@@ -31,7 +32,8 @@ const STAR_LABELS = [
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<MockReview[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form State
   const [rating, setRating] = useState<number>(5);
@@ -42,26 +44,36 @@ export default function ReviewsPage() {
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Load reviews from localStorage on mount
+  // Fetch live reviews from Supabase DB on mount
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("starxpress_reviews");
-      if (saved) {
-        setReviews(JSON.parse(saved));
-      } else {
-        setReviews(mockReviews);
+    async function loadReviews() {
+      try {
+        const res = await getPublishedReviewsAction();
+        if (res.success && res.reviews) {
+          const mapped: MockReview[] = res.reviews.map((r: any) => ({
+            id: r.id,
+            customerName: r.customer_name,
+            service: r.service,
+            rating: r.rating,
+            comment: r.comment,
+            date: r.date_formatted,
+          }));
+          setReviews(mapped);
+        }
+      } catch (err) {
+        console.error("Error loading reviews from Supabase:", err);
+      } finally {
+        setIsLoading(false);
       }
-    } catch {
-      setReviews(mockReviews);
     }
-    setIsLoaded(true);
+    loadReviews();
   }, []);
 
   const avg = reviews.length > 0
     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : "5.0";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName.trim()) {
       setErrorMsg("กรุณากรอกชื่อของคุณ");
@@ -76,37 +88,45 @@ export default function ReviewsPage() {
       return;
     }
 
-    const today = new Date();
-    const thaiMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-    const formattedDate = `${today.getDate()} ${thaiMonths[today.getMonth()]} ${today.getFullYear() + 543}`;
-
-    const newReview: MockReview = {
-      id: `user-rv-${Date.now()}`,
-      customerName: customerName.trim(),
-      service,
-      rating,
-      comment: comment.trim(),
-      date: formattedDate,
-    };
-
-    const updated = [newReview, ...reviews];
-    setReviews(updated);
-    try {
-      localStorage.setItem("starxpress_reviews", JSON.stringify(updated));
-    } catch {
-      // ignore
-    }
-
-    // Reset form
-    setComment("");
-    setCustomerName("");
-    setRating(5);
+    setIsSubmitting(true);
     setErrorMsg(null);
-    setSubmittedSuccess(true);
 
-    setTimeout(() => {
-      setSubmittedSuccess(false);
-    }, 5000);
+    try {
+      const res = await submitReviewAction({
+        customerName: customerName.trim(),
+        service,
+        rating,
+        comment: comment.trim(),
+      });
+
+      if (res.success && res.review) {
+        const newReview: MockReview = {
+          id: res.review.id,
+          customerName: res.review.customer_name,
+          service: res.review.service,
+          rating: res.review.rating,
+          comment: res.review.comment,
+          date: res.review.date_formatted,
+        };
+        setReviews((prev) => [newReview, ...prev]);
+
+        // Reset form
+        setComment("");
+        setCustomerName("");
+        setRating(5);
+        setSubmittedSuccess(true);
+
+        setTimeout(() => {
+          setSubmittedSuccess(false);
+        }, 5000);
+      } else {
+        setErrorMsg(res.error || "เกิดข้อผิดพลาดในการส่งรีวิว");
+      }
+    } catch (err: any) {
+      setErrorMsg(err?.message || "ไม่สามารถเชื่อมต่อฐานข้อมูลได้");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -162,13 +182,13 @@ export default function ReviewsPage() {
                   <h2 className="font-heading text-lg font-bold text-foreground">เขียนรีวิวให้เรา</h2>
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  แชร์ความประทับใจและให้คะแนนดาว เพื่อเป็นกำลังใจให้ทีมงาน
+                  แชร์ความประทับใจและให้คะแนนดาว เพื่อเป็นกำลังใจให้ทีมงาน (บันทึกลงฐานข้อมูลจริง)
                 </p>
 
                 {submittedSuccess && (
                   <div className="mt-4 flex items-center gap-2 rounded-xl bg-emerald-500/10 p-3 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                     <CheckCircle2 className="size-4 shrink-0" />
-                    <span>ส่งรีวิวสำเร็จ ขอบคุณสำหรับข้อความรีวิวครับ! ✨</span>
+                    <span>ส่งรีวิวสำเร็จและบันทึกลงฐานข้อมูลแล้ว ขอบคุณครับ! ✨</span>
                   </div>
                 )}
 
@@ -252,8 +272,14 @@ export default function ReviewsPage() {
                     />
                   </div>
 
-                  <Button type="submit" size="lg" className="h-10 w-full bg-brand text-brand-fg hover:bg-brand-strong font-bold">
-                    <Send className="size-4 mr-1.5" /> ส่งรีวิว
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="h-10 w-full bg-brand text-brand-fg hover:bg-brand-strong font-bold"
+                  >
+                    <Send className="size-4 mr-1.5" />
+                    {isSubmitting ? "กำลังส่งรีวิว..." : "ส่งรีวิว"}
                   </Button>
                 </form>
               </CardContent>
@@ -268,7 +294,11 @@ export default function ReviewsPage() {
               </h3>
             </div>
 
-            {reviews.length > 0 ? (
+            {isLoading ? (
+              <div className="p-10 text-center text-sm text-muted-foreground">
+                กำลังโหลดรีวิวจากฐานข้อมูล...
+              </div>
+            ) : reviews.length > 0 ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 {reviews.map((review) => (
                   <Card key={review.id} className="transition-all hover:shadow-md">

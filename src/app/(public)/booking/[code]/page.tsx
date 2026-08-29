@@ -17,6 +17,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BookingStatusBadge, PaymentStatusBadge } from "@/components/shared/status-badge";
 import { mockBookings } from "@/lib/mock-data";
+import { getBookingByCodeAction } from "@/actions/booking";
+import { formatThaiDate } from "@/lib/thai-calendar";
 import { BUSINESS } from "@/constants/booking";
 
 const TIMELINE: Record<string, { label: string; desc: string }[]> = {
@@ -39,8 +41,50 @@ const TIMELINE: Record<string, { label: string; desc: string }[]> = {
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const booking = mockBookings.find((b) => b.code === code.toUpperCase());
+  const cleanCode = code.toUpperCase();
+
+  let booking: any = null;
+  const dbRes = await getBookingByCodeAction(cleanCode);
+
+  if (dbRes.success && dbRes.booking) {
+    const b = dbRes.booking;
+    const payment = b.payments?.[0];
+    const slotInfo =
+      b.slot === "morning"
+        ? { start: "09:00", end: "13:00", label: "ช่วงเช้า (09:00 - 13:00 น.)" }
+        : b.slot === "evening"
+          ? { start: "13:00", end: "17:00", label: "ช่วงบ่าย (13:00 - 17:00 น.)" }
+          : { start: "09:00", end: "17:00", label: "เต็มวัน (09:00 - 17:00 น.)" };
+
+    booking = {
+      code: b.code,
+      serviceName: b.service_name,
+      packageName: b.package_name,
+      photographer: "ช่างภาพ Star X-Press",
+      date: formatThaiDate(b.date, "full"),
+      startTime: slotInfo.start,
+      endTime: slotInfo.end,
+      slotLabel: slotInfo.label,
+      source: "เว็บไซต์ตรง",
+      deposit: b.deposit_amount,
+      remaining: Math.max(0, b.total_price - b.deposit_amount),
+      status: b.status,
+      paymentStatus:
+        payment?.status === "verified"
+          ? "verified"
+          : payment?.status === "slip_uploaded"
+            ? "slip_uploaded"
+            : payment?.status === "rejected"
+              ? "rejected"
+              : "pending",
+      note: b.customer_note,
+    };
+  } else {
+    booking = mockBookings.find((b) => b.code === cleanCode);
+  }
+
   if (!booking) notFound();
+
   const rejected = booking.paymentStatus === "rejected";
   const timeline = rejected ? TIMELINE.rejected_fallback : TIMELINE[booking.status] ?? TIMELINE.pending_verification;
 
