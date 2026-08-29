@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, Camera } from "lucide-react";
+import { Menu, X, Camera, User, PackageSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,12 +10,23 @@ const NAV_ITEMS = [
   { href: "/packages", label: "แพ็กเกจและราคา" },
   { href: "/portfolio", label: "ผลงาน" },
   { href: "/reviews", label: "รีวิว" },
+  { href: "/track", label: "ติดตามสถานะ" },
   { href: "/about", label: "เกี่ยวกับเรา" },
   { href: "/contact", label: "ติดต่อ" },
 ];
 
 export function PublicHeader() {
   const [open, setOpen] = useState(false);
+  const [isCustomer, setIsCustomer] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("starxpress_customer");
+      if (saved) setIsCustomer(true);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-md">
@@ -39,8 +50,16 @@ export function PublicHeader() {
               {item.label}
             </Link>
           ))}
-          <Link href="/book" className="ml-2">
-            <Button size="lg" className="h-9 bg-brand text-brand-fg hover:bg-brand-strong">
+
+          <Link href={isCustomer ? "/profile" : "/login"} className="ml-1">
+            <Button variant="ghost" size="sm" className="h-9 gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground">
+              <User className="size-3.5" />
+              {isCustomer ? "โปรไฟล์ของฉัน" : "เข้าสู่ระบบ"}
+            </Button>
+          </Link>
+
+          <Link href="/book" className="ml-1">
+            <Button size="sm" className="h-9 bg-brand text-brand-fg hover:bg-brand-strong font-bold">
               จองเลย
             </Button>
           </Link>
@@ -69,8 +88,16 @@ export function PublicHeader() {
               {item.label}
             </Link>
           ))}
+          <Link
+            href={isCustomer ? "/profile" : "/login"}
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <User className="size-4" />
+            {isCustomer ? "โปรไฟล์ของฉัน" : "เข้าสู่ระบบ"}
+          </Link>
           <Link href="/book" onClick={() => setOpen(false)} className="block pt-2">
-            <Button size="lg" className="w-full h-10 bg-brand text-brand-fg hover:bg-brand-strong">
+            <Button size="lg" className="w-full h-10 bg-brand text-brand-fg hover:bg-brand-strong font-bold">
               จองเลย
             </Button>
           </Link>

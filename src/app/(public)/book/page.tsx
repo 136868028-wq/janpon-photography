@@ -109,6 +109,18 @@ function BookWizard() {
         });
         if (res.success && res.code) {
           setBookingCode(res.code);
+          try {
+            localStorage.setItem(
+              "starxpress_customer",
+              JSON.stringify({
+                phone: customer.phone.replace(/[^0-9]/g, ""),
+                fullName: customer.fullName,
+                loggedInAt: new Date().toISOString(),
+              })
+            );
+          } catch {
+            // ignore
+          }
         }
       } catch (err) {
         console.error("Booking error:", err);
@@ -544,11 +556,15 @@ function BookWizard() {
                   <div className="flex justify-between py-1"><span className="text-muted-foreground">สถานะ</span><span className="font-medium text-sky-600 dark:text-sky-400">รอตรวจสอบหลักฐาน</span></div>
                 </div>
                 <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                  <Link href={`/booking/${bookingCode}`}>
-                    <Button size="lg" className="h-10 w-full sm:w-auto">ติดตามสถานะการจอง</Button>
+                  <Link href={`/track/${bookingCode}`}>
+                    <Button size="lg" className="h-10 w-full sm:w-auto bg-brand text-brand-fg hover:bg-brand-strong font-bold">
+                      📦 ติดตามสถานะคิวงาน (Tracking)
+                    </Button>
                   </Link>
-                  <Link href="/">
-                    <Button size="lg" variant="outline" className="h-10 w-full sm:w-auto">กลับหน้าแรก</Button>
+                  <Link href="/profile">
+                    <Button size="lg" variant="outline" className="h-10 w-full sm:w-auto">
+                      ดูประวัติการจองทั้งหมด
+                    </Button>
                   </Link>
                 </div>
               </div>

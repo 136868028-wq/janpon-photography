@@ -21,10 +21,10 @@ export async function createBookingAction(input: CreateBookingInput) {
   try {
     const supabase = await createServerSupabaseClient();
 
-    // Generate 8-character unique alphanumeric booking code (e.g. SX7M8T2W)
+    // Generate Parcel-style Tracking Code (e.g. STX-26894K)
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let code = "SX";
-    for (let i = 0; i < 6; i++) {
+    let code = "STX-26";
+    for (let i = 0; i < 4; i++) {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
@@ -75,10 +75,12 @@ export async function createBookingAction(input: CreateBookingInput) {
 export async function getBookingByCodeAction(code: string) {
   try {
     const supabase = await createServerSupabaseClient();
+    const cleanCode = code.trim().toUpperCase();
+
     const { data, error } = await supabase
       .from("bookings")
       .select("*, payments(*)")
-      .eq("code", code.trim().toUpperCase())
+      .eq("code", cleanCode)
       .maybeSingle();
 
     if (error) return { success: false, error: error.message };
@@ -90,7 +92,7 @@ export async function getBookingByCodeAction(code: string) {
   }
 }
 
-export async function getBookingsByPhoneAction(phone: string) {
+export async function getCustomerBookingsByPhoneAction(phone: string) {
   try {
     const supabase = await createServerSupabaseClient();
     const cleanPhone = phone.replace(/[^0-9]/g, "");
@@ -101,10 +103,10 @@ export async function getBookingsByPhoneAction(phone: string) {
       .ilike("customer_phone", `%${cleanPhone}%`)
       .order("created_at", { ascending: false });
 
-    if (error) return { success: false, error: error.message };
+    if (error) return { success: false, error: error.message, bookings: [] };
     return { success: true, bookings: data || [] };
   } catch (err: any) {
-    return { success: false, error: err?.message || "ไม่สามารถค้นหาการจองได้" };
+    return { success: false, error: err?.message, bookings: [] };
   }
 }
 
@@ -128,7 +130,7 @@ export async function uploadSlipAction(code: string, slipDataUrl: string) {
     // Update booking status
     const { error: bkError } = await supabase
       .from("bookings")
-      .update({ status: "pending_verification" })
+      .update({ status: "pending_verification", updated_at: new Date().toISOString() })
       .eq("code", cleanCode);
 
     if (bkError) return { success: false, error: bkError.message };
