@@ -110,14 +110,19 @@ function BookWizard() {
         if (res.success && res.code) {
           setBookingCode(res.code);
           try {
+            const cleanPhone = customer.phone.replace(/[^0-9]/g, "");
             localStorage.setItem(
               "starxpress_customer",
               JSON.stringify({
-                phone: customer.phone.replace(/[^0-9]/g, ""),
+                phone: cleanPhone,
                 fullName: customer.fullName,
                 loggedInAt: new Date().toISOString(),
               })
             );
+            const oldCodes = JSON.parse(localStorage.getItem("starxpress_my_codes") || "[]");
+            if (!oldCodes.includes(res.code)) {
+              localStorage.setItem("starxpress_my_codes", JSON.stringify([res.code, ...oldCodes]));
+            }
           } catch {
             // ignore
           }

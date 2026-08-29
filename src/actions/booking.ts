@@ -21,6 +21,9 @@ export async function createBookingAction(input: CreateBookingInput) {
   try {
     const supabase = await createServerSupabaseClient();
 
+    // Clean phone number (e.g. 0812345678)
+    const cleanPhone = input.customerPhone.trim().replace(/[^0-9]/g, "");
+
     // Generate Parcel-style Tracking Code (e.g. STX-26894K)
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let code = "STX-26";
@@ -41,11 +44,11 @@ export async function createBookingAction(input: CreateBookingInput) {
         total_price: input.totalPrice,
         deposit_amount: input.depositAmount,
         status: "holding",
-        customer_name: input.customerName,
-        customer_phone: input.customerPhone,
-        customer_email: input.customerEmail || null,
-        customer_line: input.customerLine || null,
-        customer_note: input.customerNote || null,
+        customer_name: input.customerName.trim(),
+        customer_phone: cleanPhone || input.customerPhone.trim(),
+        customer_email: input.customerEmail?.trim() || null,
+        customer_line: input.customerLine?.trim() || null,
+        customer_note: input.customerNote?.trim() || null,
         photo_consent: input.photoConsent,
         hold_expires_at: holdExpires,
       })
@@ -95,16 +98,28 @@ export async function getBookingByCodeAction(code: string) {
 export async function getCustomerBookingsByPhoneAction(phone: string) {
   try {
     const supabase = await createServerSupabaseClient();
-    const cleanPhone = phone.replace(/[^0-9]/g, "");
+    const cleanDigits = phone.replace(/[^0-9]/g, "");
+    const last9 = cleanDigits.length >= 9 ? cleanDigits.slice(-9) : cleanDigits;
 
+    // Fetch all bookings and match by digits in JS to guarantee 100% matches regardless of dashes/spaces
     const { data, error } = await supabase
       .from("bookings")
       .select("*, payments(*)")
-      .ilike("customer_phone", `%${cleanPhone}%`)
       .order("created_at", { ascending: false });
 
     if (error) return { success: false, error: error.message, bookings: [] };
-    return { success: true, bookings: data || [] };
+
+    const matched = (data || []).filter((b: any) => {
+      const bDigits = (b.customer_phone || "").replace(/[^0-9]/g, "");
+      if (!bDigits || !cleanDigits) return false;
+      return (
+        bDigits.includes(cleanDigits) ||
+        cleanDigits.includes(bDigits) ||
+        (last9 && bDigits.includes(last9))
+      );
+    });
+
+    return { success: true, bookings: matched };
   } catch (err: any) {
     return { success: false, error: err?.message, bookings: [] };
   }
