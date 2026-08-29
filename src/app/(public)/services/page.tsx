@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 import { ImageMock } from "@/components/shared/image-mock";
 import { mockServices } from "@/lib/mock-data";
 
@@ -11,15 +11,11 @@ export const metadata = { title: "บริการทั้งหมด" };
 export default function ServicesPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading
-            eyebrow="บริการทั้งหมด"
-            title="บริการถ่ายภาพของเรา"
-            subtitle="ทุกบริการมีช่างภาพมืออาชีพ ไฟล์คุณภาพสูง และราคาโปร่งใส"
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="บริการทั้งหมด"
+        title="บริการถ่ายภาพของเรา"
+        subtitle="ทุกบริการมีช่างภาพมืออาชีพ ไฟล์คุณภาพสูง และราคาโปร่งใส"
+      />
       <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid gap-6 sm:grid-cols-2">
           {mockServices.map((service) => (

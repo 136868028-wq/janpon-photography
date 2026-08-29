@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Award, Heart, Users, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/public/page-header";
 import { SectionHeading } from "@/components/public/section-heading";
 import { ImageMock } from "@/components/shared/image-mock";
 import { mockImages } from "@/lib/mock-data";
@@ -18,11 +19,10 @@ const VALUES = [
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="เกี่ยวกับเรา" title="กว่า 10 ปีที่เราเก็บความทรงจำให้คนไทย" />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="เกี่ยวกับเรา"
+        title="กว่า 10 ปีที่เราเก็บความทรงจำให้คนไทย"
+      />
 
       <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid items-center gap-10 lg:grid-cols-2">

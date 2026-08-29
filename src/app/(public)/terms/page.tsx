@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 
 export const metadata = { title: "ข้อตกลงการใช้บริการ" };
 
@@ -15,11 +15,11 @@ const SECTIONS = [
 export default function TermsPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="ข้อตกลง" title="ข้อตกลงการใช้บริการ" subtitle="อัปเดตล่าสุด: 14 สิงหาคม 2569" />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="ข้อตกลง"
+        title="ข้อตกลงการใช้บริการ"
+        subtitle="อัปเดตล่าสุด: 14 สิงหาคม 2569"
+      />
       <section className="mx-auto max-w-3xl px-4 py-12">
         <div className="space-y-6">
           {SECTIONS.map((s) => (

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 import { mockPackages, mockServices } from "@/lib/mock-data";
 
 export const metadata = { title: "แพ็กเกจและราคา" };
@@ -15,15 +15,11 @@ export default function PackagesPage() {
 
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading
-            eyebrow="แพ็กเกจและราคา"
-            title="ราคาชัดเจน ไม่มีค่าใช้จ่ายแอบแฝง"
-            subtitle="มัดจำเริ่มต้น 500 บาท ชำระส่วนที่เหลือหลังรับงานเสร็จ"
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="แพ็กเกจและราคา"
+        title="ราคาชัดเจน ไม่มีค่าใช้จ่ายแอบแฝง"
+        subtitle="มัดจำเริ่มต้น 500 บาท ชำระส่วนที่เหลือหลังรับงานเสร็จ"
+      />
 
       {grouped.map(({ service, packages }) => (
         <section key={service.id} className="mx-auto max-w-6xl px-4 py-12 first:pt-16">

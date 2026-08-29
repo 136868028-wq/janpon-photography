@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/public/page-header";
 import { SectionHeading } from "@/components/public/section-heading";
 import { DayStatusPill } from "@/components/booking/slot-status";
 import { mockAvailabilityDays, mockAvailabilitySlots } from "@/lib/mock-data";
@@ -11,22 +12,21 @@ export const metadata = { title: "ตรวจวันว่าง" };
 export default function AvailabilityPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading
-            eyebrow="ตรวจวันว่าง"
-            title="ดูความพร้อมของคิวล่วงหน้า 90 วัน"
-            subtitle="อัปเดตแบบเรียลไทม์ — ถ้าเห็นว่าว่าง แปลว่าจองได้ทันที (คิวถูกล็อกเมื่อถึงขั้นตอนชำระเงิน)"
-          />
-          <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-2 text-xs">
-            <DayStatusPill status="both_free" />
-            <DayStatusPill status="morning_only" />
-            <DayStatusPill status="evening_only" />
-            <DayStatusPill status="full" />
-            <DayStatusPill status="closed" />
-          </div>
+      <PageHeader>
+        <SectionHeading
+          eyebrow="ตรวจวันว่าง"
+          title="ดูความพร้อมของคิวล่วงหน้า 90 วัน"
+          subtitle="อัปเดตแบบเรียลไทม์ — ถ้าเห็นว่าว่าง แปลว่าจองได้ทันที (คิวถูกล็อกเมื่อถึงขั้นตอนชำระเงิน)"
+          className="[&_h2]:text-white [&_p]:text-white/80"
+        />
+        <div className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-2 text-xs">
+          <DayStatusPill status="both_free" />
+          <DayStatusPill status="morning_only" />
+          <DayStatusPill status="evening_only" />
+          <DayStatusPill status="full" />
+          <DayStatusPill status="closed" />
         </div>
-      </section>
+      </PageHeader>
 
       <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid gap-8 lg:grid-cols-3">

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 import { ImageMock } from "@/components/shared/image-mock";
 import { mockPortfolio } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
@@ -21,15 +21,11 @@ export default function PortfolioPage() {
 
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading
-            eyebrow="ผลงานของเรา"
-            title="ผลงานจริงจากลูกค้าจริง"
-            subtitle="คลิกดูผลงานแต่ละหมวดหมู่ เพื่อให้เห็นสไตล์ของช่างของเรา"
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="ผลงานของเรา"
+        title="ผลงานจริงจากลูกค้าจริง"
+        subtitle="คลิกดูผลงานแต่ละหมวดหมู่ เพื่อให้เห็นสไตล์ของช่างของเรา"
+      />
       <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
         <div className="flex flex-wrap gap-2" role="tablist" aria-label="หมวดหมู่ผลงาน">
           {CATEGORIES.map((cat) => (

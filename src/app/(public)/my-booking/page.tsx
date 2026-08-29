@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 import { mockBookings } from "@/lib/mock-data";
 
 export default function MyBookingPage() {
@@ -33,15 +33,11 @@ export default function MyBookingPage() {
 
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading
-            eyebrow="ค้นหาการจอง"
-            title="เช็คสถานะการจองของคุณ"
-            subtitle="กรอกเบอร์โทรและรหัสการจอง (อยู่บนอีเมล/หน้าใบยืนยันการจอง)"
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="ค้นหาการจอง"
+        title="เช็คสถานะการจองของคุณ"
+        subtitle="กรอกเบอร์โทรและรหัสการจอง (อยู่บนอีเมล/หน้าใบยืนยันการจอง)"
+      />
       <section className="mx-auto max-w-xl px-4 py-12">
         <Card>
           <CardContent className="p-6 sm:p-8">

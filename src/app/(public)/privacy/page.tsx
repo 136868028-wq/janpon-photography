@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 
 export const metadata = { title: "นโยบายความเป็นส่วนตัว" };
 
@@ -15,15 +15,11 @@ const SECTIONS = [
 export default function PrivacyPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading
-            eyebrow="ความเป็นส่วนตัว"
-            title="นโยบายความเป็นส่วนตัว (PDPA)"
-            subtitle="เราเก็บข้อมูลเท่าที่จำเป็น และปกป้องเสมอเหมือนข้อมูลของเราเอง — อัปเดตล่าสุด: 14 สิงหาคม 2569"
-          />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="ความเป็นส่วนตัว"
+        title="นโยบายความเป็นส่วนตัว (PDPA)"
+        subtitle="เราเก็บข้อมูลเท่าที่จำเป็น และปกป้องเสมอเหมือนข้อมูลของเราเอง — อัปเดตล่าสุด: 14 สิงหาคม 2569"
+      />
       <section className="mx-auto max-w-3xl px-4 py-12">
         <div className="space-y-6">
           {SECTIONS.map((s) => (

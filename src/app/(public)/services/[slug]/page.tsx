@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,8 +25,22 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
-      <section className="bg-coal text-white">
-        <div className="mx-auto max-w-6xl px-4 py-12">
+      <section className="relative overflow-hidden bg-coal py-12 text-white sm:py-16">
+        {/* Background Banner Image */}
+        <div className="absolute inset-0 z-0 select-none pointer-events-none">
+          <Image
+            src="/images/header-banner.png"
+            alt="Star X-Press Photo Studio Banner"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-45 filter brightness-95"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-coal via-coal/60 to-coal/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-coal/85 via-coal/60 to-coal/85" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4">
           <Link href="/services" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white">
             <ArrowLeft className="size-4" /> บริการทั้งหมด
           </Link>

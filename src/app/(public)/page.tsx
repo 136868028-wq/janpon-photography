@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   CalendarCheck2,
@@ -29,8 +30,20 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-coal text-white">
-        <div className="absolute inset-0" style={{ backgroundImage: mockImages.hero.gradient, opacity: 0.55 }} aria-hidden />
-        <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 py-16 sm:py-24 lg:flex-row lg:items-center">
+        {/* Background Banner Image */}
+        <div className="absolute inset-0 z-0 select-none pointer-events-none">
+          <Image
+            src="/images/header-banner.png"
+            alt="Star X-Press Photo Studio Hero Banner"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-30 filter brightness-95"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-coal via-coal/65 to-coal/45" />
+          <div className="absolute inset-0 bg-gradient-to-r from-coal/90 via-coal/50 to-coal/90" />
+        </div>
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 py-16 sm:py-24 lg:flex-row lg:items-center">
           <div className="max-w-xl">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur">
               <Sparkles className="size-3.5 text-brand" />

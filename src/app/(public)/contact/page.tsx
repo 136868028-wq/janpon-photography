@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 import { BUSINESS } from "@/constants/booking";
 
 export const metadata = { title: "ติดต่อเรา" };
@@ -19,11 +19,11 @@ const CHANNELS = [
 export default function ContactPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="ติดต่อเรา" title="คุยกับทีมงานได้ทุกช่องทาง" subtitle="เราพร้อมตอบทุกคำถาม เรื่องแพ็กเกจ วันว่าง และขั้นตอนการจอง" />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="ติดต่อเรา"
+        title="คุยกับทีมงานได้ทุกช่องทาง"
+        subtitle="เราพร้อมตอบทุกคำถาม เรื่องแพ็กเกจ วันว่าง และขั้นตอนการจอง"
+      />
       <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid gap-8 lg:grid-cols-5">
           <div className="space-y-4 lg:col-span-2">

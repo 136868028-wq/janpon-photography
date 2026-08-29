@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Quote, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/public/page-header";
 import { SectionHeading } from "@/components/public/section-heading";
 import { mockReviews } from "@/lib/mock-data";
 
@@ -12,21 +13,23 @@ export default function ReviewsPage() {
 
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="รีวิวจากลูกค้า" title="เสียงจริงจากคนที่ไว้วางใจเรา" />
-          <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-center">
-            <div>
-              <p className="font-heading text-4xl font-extrabold text-brand">{avg}</p>
-              <p className="text-xs text-white/60">จาก 5 ดาว</p>
-            </div>
-            <div className="text-sm">
-              <p className="text-amber-400 text-lg tracking-widest">★★★★★</p>
-              <p className="mt-1 text-white/70">{mockReviews.length} รีวิว</p>
-            </div>
+      <PageHeader>
+        <SectionHeading
+          eyebrow="รีวิวจากลูกค้า"
+          title="เสียงจริงจากคนที่ไว้วางใจเรา"
+          className="[&_h2]:text-white [&_p]:text-white/80"
+        />
+        <div className="mx-auto mt-6 flex max-w-xl items-center justify-center gap-6 rounded-2xl border border-white/10 bg-white/10 p-5 text-center backdrop-blur-sm">
+          <div>
+            <p className="font-heading text-4xl font-extrabold text-brand">{avg}</p>
+            <p className="text-xs text-white/60">จาก 5 ดาว</p>
+          </div>
+          <div className="text-sm">
+            <p className="text-amber-400 text-lg tracking-widest">★★★★★</p>
+            <p className="mt-1 text-white/70">{mockReviews.length} รีวิว</p>
           </div>
         </div>
-      </section>
+      </PageHeader>
       <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {mockReviews.map((review) => (

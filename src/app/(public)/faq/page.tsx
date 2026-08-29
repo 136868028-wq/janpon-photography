@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/public/section-heading";
+import { PageHeader } from "@/components/public/page-header";
 import { FAQS } from "@/lib/mock-data";
 
 export const metadata = { title: "คำถามที่พบบ่อย" };
@@ -8,11 +8,11 @@ export const metadata = { title: "คำถามที่พบบ่อย" };
 export default function FaqPage() {
   return (
     <>
-      <section className="bg-coal py-14 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <SectionHeading eyebrow="FAQ" title="คำถามที่พบบ่อย" subtitle="รวมคำถามที่ลูกค้ามักถาม — ถ้ายังไม่เคลียร์ ทักหาผ่านช่องทางติดต่อได้เลย" />
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="FAQ"
+        title="คำถามที่พบบ่อย"
+        subtitle="รวมคำถามที่ลูกค้ามักถาม — ถ้ายังไม่เคลียร์ ทักหาผ่านช่องทางติดต่อได้เลย"
+      />
       <section className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
         <div className="space-y-3">
           {FAQS.map((faq) => (
