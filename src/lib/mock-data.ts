@@ -39,8 +39,9 @@ export const portfolioPhotos = {
 
 /** Real PromptPay QR codes for deposit by service / amount (public/qr/*). */
 export const depositQrs = {
-  gradAndPort: p("/qr/deposit-500.jpg", "QR พร้อมเพย์ 500 บาท สำหรับงานถ่ายรับปริญญาและถ่ายพอร์ต"),
-  wedding: p("/qr/deposit-1000.png", "QR พร้อมเพย์ 1,000 บาท สำหรับงานแต่งงาน"),
+  portrait: p("/qr/deposit-300.png", "QR พร้อมเพย์ 300 บาท สำหรับงานถ่ายพอร์ต"),
+  gradAndPort: p("/qr/deposit-500.jpg", "QR พร้อมเพย์ 500 บาท สำหรับงานถ่ายรับปริญญาและแต่งงานครึ่งวัน"),
+  wedding: p("/qr/deposit-1000.png", "QR พร้อมเพย์ 1,000 บาท สำหรับงานแต่งงาน (แพ็กเกจเต็มวัน)"),
   weddingPremium: p("/qr/deposit-5000.png", "QR พร้อมเพย์ 5,000 บาท สำหรับงานแต่งงาน (แพ็กเกจพรีเมียม)"),
   event: p("/qr/deposit-1500.png", "QR พร้อมเพย์ 1,500 บาท สำหรับงานอีเวนต์"),
 } satisfies Record<string, MockImage>;
@@ -51,6 +52,13 @@ export const paymentQr: MockImage = depositQrs.gradAndPort;
 export function getDepositQr(serviceSlugOrName?: string, depositAmount?: number): MockImage {
   if (depositAmount === 5000) {
     return depositQrs.weddingPremium;
+  }
+  if (
+    depositAmount === 300 ||
+    serviceSlugOrName === "portfolio" ||
+    serviceSlugOrName === "ถ่ายพอร์ต"
+  ) {
+    return depositQrs.portrait;
   }
   if (depositAmount === 500) {
     return depositQrs.gradAndPort;
@@ -69,7 +77,7 @@ export function getDepositQr(serviceSlugOrName?: string, depositAmount?: number)
   ) {
     return depositQrs.wedding;
   }
-  // Default to 500 บาท QR (Graduation, Portrait & Wedding Half-day)
+  // Default to 500 บาท QR
   return depositQrs.gradAndPort;
 }
 
@@ -115,12 +123,12 @@ export const mockServices: MockService[] = [
     id: "svc-portfolio",
     name: "ถ่ายพอร์ต",
     slug: "portfolio",
-    description: "พอร์ตสำหรับสมัครเรียน สมัครงาน หรือโมเดลลิ่ง — มุมแสงโปร สไตล์สะอาด",
+    description: "พอร์ตสำหรับสมัครเรียน สมัครงาน หรือโมเดลลิ่ง — ปรับแสงสีสวยให้ทุกภาพ ถ่ายได้ไม่จำกัด",
     image: portfolioPhotos.portrait1,
-    basePrice: 1800,
-    deposit: 500,
-    durationMinutes: 90,
-    tags: ["ไฟล์เจียร์คมทุกใบ", "ฉากหลังหลากหลาย", "แนะนำท่าทาง"],
+    basePrice: 250,
+    deposit: 300,
+    durationMinutes: 60,
+    tags: ["ชั่วโมงละ 250 บาท/คน", "ปรับแสงสีสวยให้ทุกภาพ", "ถ่ายได้ไม่จำกัด"],
     badge: "แสงสไตล์โมเดิร์น",
   },
   {
@@ -237,22 +245,16 @@ export const mockPackages: MockPackage[] = [
   {
     id: "pkg-port-1",
     serviceSlug: "portfolio",
-    name: "พอร์ตเริ่มต้น",
-    description: "สำหรับสมัครเรียน",
-    price: 1500,
-    deposit: 500,
-    durationMinutes: 90,
-    deliverables: ["ไฟล์เจียร์ 15 รูป", "3 ชุด", "ฉากหลัง 2 แบบ"],
-  },
-  {
-    id: "pkg-port-2",
-    serviceSlug: "portfolio",
-    name: "พอร์ตโปร",
-    description: "สำหรับสมัครงาน/โมเดลลิ่ง",
-    price: 2800,
-    deposit: 500,
-    durationMinutes: 120,
-    deliverables: ["ไฟล์เจียร์ 30 รูป", "5 ชุด", "ฉากหลัง 4 แบบ", "ทำใบประกอบพอร์ต"],
+    name: "แพ็กเกจถ่ายพอร์ทแบบชั่วโมง",
+    description: "ชั่วโมงละ 250 บาท ต่อคน ปรับแสงสีสวยให้ทุกภาพ ถ่ายได้ไม่จำกัด",
+    price: 250,
+    deposit: 300,
+    durationMinutes: 60,
+    deliverables: [
+      "ชั่วโมงละ 250 บาท ต่อคน",
+      "ปรับแสงสีสวยให้ทุกภาพ",
+      "ถ่ายได้ไม่จำกัด",
+    ],
     popular: true,
   },
   {
@@ -357,14 +359,14 @@ export type MockBooking = {
 export const mockBookings: MockBooking[] = [
   { id: "bk-1", code: "JN7F2K9Q", customerName: "นิ้ง นภัสสร", phone: "089-111-2233", serviceName: "ถ่ายรับปริญญา", packageName: "แพ็กเกจเต็มวัน", date: "2026-08-20", startTime: "09:00", endTime: "13:00", status: "confirmed", paymentStatus: "verified", deposit: 500, remaining: 5000, source: "facebook", photographer: "พี่แนน" },
   { id: "bk-2", code: "JN4M8T2W", customerName: "อ้อม วนิดา", phone: "089-222-3344", serviceName: "ถ่ายงานแต่งงาน", packageName: "แพ็กเกจพรีเมียม", date: "2026-08-21", startTime: "09:00", endTime: "13:00", status: "pending_verification", paymentStatus: "slip_uploaded", deposit: 5000, remaining: 10000, source: "instagram", photographer: "ช่างเก่ง", note: "ลูกค้าขอถ่ายที่บ้านเจ้าสาวก่อน" },
-  { id: "bk-3", code: "JN9X5C3R", customerName: "เจนนิเฟอร์ ลี", phone: "089-333-4455", serviceName: "ถ่ายพอร์ต", packageName: "พอร์ตโปร", date: "2026-08-21", startTime: "13:00", endTime: "17:00", status: "holding", paymentStatus: "pending", deposit: 500, remaining: 2300, source: "line", photographer: "ช่างเก่ง" },
+  { id: "bk-3", code: "JN9X5C3R", customerName: "เจนนิเฟอร์ ลี", phone: "089-333-4455", serviceName: "ถ่ายพอร์ต", packageName: "แพ็กเกจถ่ายพอร์ทแบบชั่วโมง", date: "2026-08-21", startTime: "13:00", endTime: "17:00", status: "holding", paymentStatus: "pending", deposit: 300, remaining: 200, source: "line", photographer: "ช่างเก่ง" },
   { id: "bk-4", code: "JN2P6H8D", customerName: "บอส ปรเมศร์", phone: "089-444-5566", serviceName: "ถ่ายอีเวนต์", packageName: "อีเวนต์เล็ก", date: "2026-08-18", startTime: "13:00", endTime: "17:00", status: "confirmed", paymentStatus: "verified", deposit: 1500, remaining: 3500, source: "tiktok", photographer: "พี่มิกซ์" },
   { id: "bk-5", code: "JN8B1V9M", customerName: "ป่าน บุตรี", phone: "089-555-6677", serviceName: "ถ่ายรับปริญญา", packageName: "แพ็กเกจครึ่งวัน", date: "2026-08-14", startTime: "09:00", endTime: "13:00", status: "completed", paymentStatus: "verified", deposit: 500, remaining: 4000, source: "poster", photographer: "พี่แนน" },
   { id: "bk-6", code: "JN5G3K7L", customerName: "เพชร รวิภาส", phone: "089-666-7788", serviceName: "ถ่ายงานแต่งงาน", packageName: "แพ็กเกจเต็มวัน", date: "2026-08-14", startTime: "13:00", endTime: "17:00", status: "cancelled", paymentStatus: "refunded", deposit: 1000, remaining: 0, source: "facebook", photographer: "ช่างเก่ง", note: "ลูกค้าขอยกเลิกเพราะเหตุจำเป็น" },
-  { id: "bk-7", code: "JN7H4Q2W", customerName: "เฟิร์น ฟาง", phone: "089-777-8899", serviceName: "ถ่ายพอร์ต", packageName: "พอร์ตเริ่มต้น", date: "2026-08-13", startTime: "09:00", endTime: "13:00", status: "expired", paymentStatus: "expired", deposit: 500, remaining: 1000, source: "google", photographer: "พี่แนน" },
+  { id: "bk-7", code: "JN7H4Q2W", customerName: "เฟิร์น ฟาง", phone: "089-777-8899", serviceName: "ถ่ายพอร์ต", packageName: "แพ็กเกจถ่ายพอร์ทแบบชั่วโมง", date: "2026-08-13", startTime: "09:00", endTime: "13:00", status: "expired", paymentStatus: "expired", deposit: 300, remaining: 0, source: "google", photographer: "พี่แนน" },
   { id: "bk-8", code: "JN3J6Z9X", customerName: "มิน ลลนา", phone: "089-888-9900", serviceName: "ถ่ายรับปริญญา", packageName: "แพ็กเกจถ่ายชั่วโมง", date: "2026-09-05", startTime: "09:00", endTime: "13:00", status: "confirmed", paymentStatus: "verified", deposit: 500, remaining: 1000, source: "qr_offline", photographer: "ช่างเก่ง" },
   { id: "bk-9", code: "JN6C2F5P", customerName: "โอม ชลสิทธิ์", phone: "089-999-0011", serviceName: "ถ่ายอีเวนต์", packageName: "อีเวนต์ใหญ่", date: "2026-09-12", startTime: "09:00", endTime: "13:00", status: "pending_payment", paymentStatus: "pending", deposit: 1500, remaining: 13500, source: "direct", photographer: "พี่มิกซ์" },
-  { id: "bk-10", code: "JN1D4G8T", customerName: "แพรว พิมพ์ชนก", phone: "090-111-2233", serviceName: "ถ่ายพอร์ต", packageName: "พอร์ตโปร", date: "2026-08-22", startTime: "09:00", endTime: "13:00", status: "pending_verification", paymentStatus: "rejected", deposit: 500, remaining: 2300, source: "instagram", photographer: "พี่แนน", note: "สลิปไม่ชัดเจน ขออัปโหลดใหม่" },
+  { id: "bk-10", code: "JN1D4G8T", customerName: "แพรว พิมพ์ชนก", phone: "090-111-2233", serviceName: "ถ่ายพอร์ต", packageName: "แพ็กเกจถ่ายพอร์ทแบบชั่วโมง", date: "2026-08-22", startTime: "09:00", endTime: "13:00", status: "pending_verification", paymentStatus: "rejected", deposit: 300, remaining: 200, source: "instagram", photographer: "พี่แนน", note: "สลิปไม่ชัดเจน ขออัปโหลดใหม่" },
 ];
 
 export type MockPayment = {

@@ -75,13 +75,30 @@ export default function AdminSettingsPage() {
                 </label>
               </div>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
+                  <div className="inline-flex rounded-full bg-purple-500/10 px-2 py-0.5 text-[11px] font-bold text-purple-600 dark:text-purple-400">
+                    รูปที่ 1 · 300 บาท
+                  </div>
+                  <p className="text-xs font-semibold">ถ่ายพอร์ต</p>
+                  <div className="mx-auto w-24">
+                    <ImageMock
+                      image={depositQrs.portrait}
+                      aspect="aspect-[729/1024]"
+                      showCaption={false}
+                      objectFit="contain"
+                      className="border shadow-sm"
+                    />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">ธ.กรุงไทย · นายนุกมัน แบนอ</p>
+                </div>
+
                 <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
                   <div className="inline-flex rounded-full bg-blue-500/10 px-2 py-0.5 text-[11px] font-bold text-blue-600 dark:text-blue-400">
-                    รูปที่ 1 · 500 บาท
+                    รูปที่ 2 · 500 บาท
                   </div>
-                  <p className="text-xs font-semibold">รับปริญญา, พอร์ต & แต่งงานครึ่งวัน</p>
-                  <div className="mx-auto w-28">
+                  <p className="text-xs font-semibold">รับปริญญา & แต่งงานครึ่งวัน</p>
+                  <div className="mx-auto w-24">
                     <ImageMock
                       image={depositQrs.gradAndPort}
                       aspect="aspect-[729/1024]"
@@ -95,10 +112,10 @@ export default function AdminSettingsPage() {
 
                 <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
                   <div className="inline-flex rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-bold text-rose-600 dark:text-rose-400">
-                    รูปที่ 2 · 1,000 บาท
+                    รูปที่ 3 · 1,000 บาท
                   </div>
-                  <p className="text-xs font-semibold">งานแต่งงาน (แพ็กเกจเต็มวัน)</p>
-                  <div className="mx-auto w-28">
+                  <p className="text-xs font-semibold">งานแต่งงาน (เต็มวัน)</p>
+                  <div className="mx-auto w-24">
                     <ImageMock
                       image={depositQrs.wedding}
                       aspect="aspect-[729/1024]"
@@ -114,8 +131,8 @@ export default function AdminSettingsPage() {
                   <div className="inline-flex rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                     พรีเมียม · 5,000 บาท
                   </div>
-                  <p className="text-xs font-semibold">งานแต่งงาน (แพ็กเกจพรีเมียม)</p>
-                  <div className="mx-auto w-28">
+                  <p className="text-xs font-semibold">งานแต่งงาน (พรีเมียม)</p>
+                  <div className="mx-auto w-24">
                     <ImageMock
                       image={depositQrs.weddingPremium}
                       aspect="aspect-[729/1024]"
@@ -129,10 +146,10 @@ export default function AdminSettingsPage() {
 
                 <div className="space-y-2 rounded-xl border bg-card p-3 text-center">
                   <div className="inline-flex rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">
-                    รูปที่ 3 · 1,500 บาท
+                    รูปที่ 5 · 1,500 บาท
                   </div>
                   <p className="text-xs font-semibold">งานอีเวนต์</p>
-                  <div className="mx-auto w-28">
+                  <div className="mx-auto w-24">
                     <ImageMock
                       image={depositQrs.event}
                       aspect="aspect-[729/1024]"
