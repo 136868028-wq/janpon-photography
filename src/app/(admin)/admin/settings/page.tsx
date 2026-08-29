@@ -97,7 +97,7 @@ export default function AdminSettingsPage() {
                   <div className="inline-flex rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-bold text-rose-600 dark:text-rose-400">
                     รูปที่ 2 · 1,000 บาท
                   </div>
-                  <p className="text-xs font-semibold">งานแต่งงาน (ทั่วไป)</p>
+                  <p className="text-xs font-semibold">งานแต่งงาน (แพ็กเกจเต็มวัน)</p>
                   <div className="mx-auto w-28">
                     <ImageMock
                       image={depositQrs.wedding}

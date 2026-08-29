@@ -169,11 +169,15 @@ export const mockPackages: MockPackage[] = [
     id: "pkg-wed-2",
     serviceSlug: "wedding",
     name: "แพ็กเกจเต็มวัน",
-    description: "พิธีเช้า + เย็น + ครอบครัว + รอบสตูดิโอ",
-    price: 25000,
+    description: "ช่างภาพ 2 คน พร้อมวิดิโอ 1-2 นาที และรูปขนาด 8*12 จำนวน 2 แผ่น",
+    price: 6000,
     deposit: 1000,
     durationMinutes: 480,
-    deliverables: ["ช่าง 2 ทีม", "ไฟล์แต่งสี 400 รูป", "อัลบั้ม 12x12", "วีดีโอไฮไลท์ 5 นาที"],
+    deliverables: [
+      "ช่างภาพ 2 คน",
+      "เพิ่ม วิดิโอ 1-2 นาที",
+      "มีรูปขนาด 8*12 2แผ่น",
+    ],
     popular: true,
   },
   {
