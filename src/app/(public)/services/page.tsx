@@ -44,9 +44,6 @@ export default function ServicesPage() {
                 </div>
                 <div className="absolute inset-x-4 bottom-4 text-white">
                   <h2 className="font-heading text-2xl font-bold drop-shadow-sm">{service.name}</h2>
-                  <p className="flex items-center gap-1.5 text-xs text-white/80 mt-1">
-                    <Clock className="size-3.5 text-brand" /> ประมาณ {service.durationMinutes} นาที
-                  </p>
                 </div>
               </div>
 

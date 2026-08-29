@@ -142,9 +142,6 @@ export default function HomePage() {
                 {/* Title overlay at bottom of image */}
                 <div className="absolute inset-x-3 bottom-3 text-white">
                   <h3 className="font-heading text-lg font-bold drop-shadow-sm">{service.name}</h3>
-                  <p className="flex items-center gap-1.5 text-xs text-white/80">
-                    <Clock className="size-3 text-brand" /> ประมาณ {service.durationMinutes} นาที
-                  </p>
                 </div>
               </div>
 

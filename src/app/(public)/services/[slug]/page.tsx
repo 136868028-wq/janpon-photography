@@ -57,7 +57,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </div>
               <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/70">
                 <span className="flex items-center gap-1.5"><Wallet className="size-4 text-brand" /> มัดจำ {service.deposit.toLocaleString("th-TH")} บาท</span>
-                <span className="flex items-center gap-1.5"><Clock className="size-4 text-brand" /> ประมาณ {service.durationMinutes} นาที</span>
               </div>
               <Link href={`/book?service=${service.slug}`} className="mt-8 inline-block">
                 <Button size="lg" className="h-11 bg-brand px-6 text-base font-bold text-brand-fg hover:bg-brand-strong">
@@ -86,7 +85,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   <span className="font-heading text-2xl font-extrabold text-brand-strong">{pkg.price.toLocaleString("th-TH")}</span>
                   <span className="text-sm text-muted-foreground"> บาท</span>
                 </p>
-                <p className="text-xs text-muted-foreground">มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท · ประมาณ {pkg.durationMinutes} นาที</p>
+                <p className="text-xs text-muted-foreground">มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท</p>
                 <ul className="mt-4 space-y-2">
                   {pkg.deliverables.map((d) => (
                     <li key={d} className="flex items-start gap-2 text-xs text-muted-foreground">

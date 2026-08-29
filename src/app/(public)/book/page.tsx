@@ -122,7 +122,6 @@ function BookWizard() {
                       <div className="min-w-0">
                         <p className="text-sm font-bold">{s.name}</p>
                         <p className="text-xs text-muted-foreground">เริ่ม {s.basePrice.toLocaleString("th-TH")} บาท · มัดจำ {s.deposit.toLocaleString("th-TH")} บาท</p>
-                        <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground"><Clock className="size-3" /> ประมาณ {s.durationMinutes} นาที</p>
                       </div>
                     </button>
                   ))}
@@ -162,7 +161,7 @@ function BookWizard() {
                               <span className="text-xs font-normal text-muted-foreground">บาท</span>
                             </p>
                             <p className="text-[11px] text-muted-foreground">
-                              มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท · {pkg.durationMinutes} นาที
+                              มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท
                             </p>
                           </div>
                         </button>

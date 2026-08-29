@@ -45,7 +45,7 @@ export default function PackagesPage() {
                     <span className="font-heading text-2xl font-extrabold text-brand-strong">{pkg.price.toLocaleString("th-TH")}</span>
                     <span className="text-sm text-muted-foreground"> บาท</span>
                   </p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท · ประมาณ {pkg.durationMinutes} นาที</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">มัดจำ {pkg.deposit.toLocaleString("th-TH")} บาท</p>
                   <ul className="mt-4 space-y-2">
                     {pkg.deliverables.map((d) => (
                       <li key={d} className="flex items-start gap-2 text-xs text-muted-foreground">
