@@ -185,7 +185,7 @@ export default function HomePage() {
 
                   <div className="grid grid-cols-2 gap-2">
                     <Link href={`/services/${service.slug}`} className="w-full">
-                      <Button size="sm" className="h-9 w-full bg-coal text-white hover:bg-black text-xs">
+                      <Button size="sm" variant="black" className="h-9 w-full text-xs">
                         ดูแพ็กเกจ
                       </Button>
                     </Link>
@@ -277,7 +277,7 @@ export default function HomePage() {
                       ))}
                     </ul>
                     <Link href="/book" className="mt-5 block">
-                      <Button size="lg" className="h-10 w-full bg-black text-white hover:bg-neutral-900 border border-white/25 font-semibold">
+                      <Button size="lg" variant="black" className="h-10 w-full border border-white/25 font-semibold">
                         จองแพ็กเกจนี้
                       </Button>
                     </Link>

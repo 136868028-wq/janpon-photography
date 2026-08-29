@@ -29,7 +29,7 @@ export default function PackagesPage() {
               <p className="mt-1 text-sm text-muted-foreground">{service.description}</p>
             </div>
             <Link href={`/book?service=${service.slug}`}>
-              <Button size="sm" className="h-9 bg-coal text-white hover:bg-black">
+              <Button size="sm" variant="black" className="h-9">
                 จอง{service.name.replace("ถ่าย", "")}
               </Button>
             </Link>
@@ -56,7 +56,7 @@ export default function PackagesPage() {
                     ))}
                   </ul>
                   <Link href={`/book?service=${service.slug}&package=${pkg.id}`} className="mt-5 block">
-                    <Button size="lg" className="h-10 w-full bg-coal font-medium text-white transition-colors hover:bg-black">
+                    <Button size="lg" variant="black" className="h-10 w-full font-medium">
                       เลือกแพ็กเกจนี้
                     </Button>
                   </Link>

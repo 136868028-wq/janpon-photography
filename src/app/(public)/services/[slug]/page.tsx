@@ -94,7 +94,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   ))}
                 </ul>
                 <Link href={`/book?service=${service.slug}&package=${pkg.id}`} className="mt-5 block">
-                  <Button size="lg" className="h-10 w-full bg-coal font-medium text-white transition-colors hover:bg-black">
+                  <Button size="lg" variant="black" className="h-10 w-full font-medium">
                     จองแพ็กเกจนี้
                   </Button>
                 </Link>
