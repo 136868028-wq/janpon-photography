@@ -29,7 +29,9 @@ export default function PackagesPage() {
               <p className="mt-1 text-sm text-muted-foreground">{service.description}</p>
             </div>
             <Link href={`/book?service=${service.slug}`}>
-              <Button size="sm" variant="outline" className="h-9">จอง {service.name.split(" ")[1] ?? "บริการ"}</Button>
+              <Button size="sm" className="h-9 bg-coal text-white hover:bg-black">
+                จอง{service.name.replace("ถ่าย", "")}
+              </Button>
             </Link>
           </div>
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -54,7 +56,7 @@ export default function PackagesPage() {
                     ))}
                   </ul>
                   <Link href={`/book?service=${service.slug}&package=${pkg.id}`} className="mt-5 block">
-                    <Button size="lg" variant={pkg.popular ? "default" : "outline"} className="h-10 w-full">
+                    <Button size="lg" className="h-10 w-full bg-coal font-medium text-white transition-colors hover:bg-black">
                       เลือกแพ็กเกจนี้
                     </Button>
                   </Link>
