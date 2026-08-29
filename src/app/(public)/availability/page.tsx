@@ -52,7 +52,7 @@ export default function AvailabilityPage() {
                     {formatThaiDate(selectedDate, "full")}
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    มีคิวเปิดรับทั้งช่วงเช้า (09:00-13:00) และช่วงบ่าย (13:00-17:00)
+                    มีคิวเปิดรับทั้งช่วงเช้า (09:00-13:00), ช่วงบ่าย (13:00-17:00) และเต็มวัน (09:00-17:00)
                   </p>
                   <Link href={`/book?date=${selectedDate}`} className="mt-4 block">
                     <Button size="lg" className="h-10 w-full bg-brand text-brand-fg hover:bg-brand-strong">

@@ -473,6 +473,7 @@ export const mockAvailabilityDays: MockAvailabilityDay[] = [
 export const mockAvailabilitySlots = [
   { slot: "ช่วงเช้า", range: "09:00 - 13:00 น.", state: "available" },
   { slot: "ช่วงบ่าย", range: "13:00 - 17:00 น.", state: "available" },
+  { slot: "เต็มวัน", range: "09:00 - 17:00 น.", state: "available" },
 ] as const;
 
 export type MockAnalytics = {

@@ -92,6 +92,7 @@ export const ROLE_LABEL_TH: Record<Role, string> = {
 /** V1 slot definitions — configurable in DB via availability_rules. */
 export const SLOT_MORNING = { start: "09:00", end: "13:00", label: "ช่วงเช้า", rangeLabel: "09:00 - 13:00 น." };
 export const SLOT_EVENING = { start: "13:00", end: "17:00", label: "ช่วงบ่าย", rangeLabel: "13:00 - 17:00 น." };
+export const SLOT_FULLDAY = { start: "09:00", end: "17:00", label: "เต็มวัน", rangeLabel: "09:00 - 17:00 น." };
 
 /** Calendar day status — label is mandatory, color is supplementary. */
 export type DaySlotStatus = "both_free" | "morning_only" | "evening_only" | "full" | "closed" | "past";

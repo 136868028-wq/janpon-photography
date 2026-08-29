@@ -25,7 +25,7 @@ import { SlotChip, DayStatusPill } from "@/components/booking/slot-status";
 import { ThaiBookingCalendar } from "@/components/booking/thai-calendar";
 import { mockServices, mockPackages, mockPaymentSettings, getDepositQr } from "@/lib/mock-data";
 import { formatThaiDate, getDayAvailability } from "@/lib/thai-calendar";
-import { HOLD_DURATION_MINUTES, SLOT_MORNING, SLOT_EVENING, BUSINESS } from "@/constants/booking";
+import { HOLD_DURATION_MINUTES, SLOT_MORNING, SLOT_EVENING, SLOT_FULLDAY, BUSINESS } from "@/constants/booking";
 import { cn } from "@/lib/utils";
 
 type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
@@ -200,7 +200,7 @@ function BookWizard() {
                         </p>
                       </div>
                     </div>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
                       <SlotChip
                         label={SLOT_MORNING.label}
                         range={SLOT_MORNING.rangeLabel}
@@ -224,6 +224,19 @@ function BookWizard() {
                           selectedDay.status === "past"
                         }
                         onSelect={() => setSlot("evening")}
+                      />
+                      <SlotChip
+                        label="จองเต็มวัน"
+                        range={SLOT_FULLDAY.rangeLabel}
+                        selected={slot === "fullday"}
+                        disabled={
+                          selectedDay.status === "morning_only" ||
+                          selectedDay.status === "evening_only" ||
+                          selectedDay.status === "full" ||
+                          selectedDay.status === "closed" ||
+                          selectedDay.status === "past"
+                        }
+                        onSelect={() => setSlot("fullday")}
                       />
                     </div>
                   </div>
@@ -277,7 +290,7 @@ function BookWizard() {
                   {[
                     ["บริการ", service.name],
                     ["แพ็กเกจ", selectedPackage ? selectedPackage.name : "-"],
-                    ["ช่วงเวลา", date ? `${formatThaiDate(date, "full")} · ${slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label} (${slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel})` : "-"],
+                    ["ช่วงเวลา", date ? `${formatThaiDate(date, "full")} · ${slot === "fullday" ? SLOT_FULLDAY.label : slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label} (${slot === "fullday" ? SLOT_FULLDAY.rangeLabel : slot === "morning" ? SLOT_MORNING.rangeLabel : SLOT_EVENING.rangeLabel})` : "-"],
                     ["ชื่อผู้จอง", customer.fullName],
                     ["เบอร์โทร", customer.phone],
                     ["อีเมล", customer.email || "-"],
@@ -449,7 +462,7 @@ function BookWizard() {
                   <p className="truncate">
                     <span className="font-semibold">{service.name}</span>
                     {selectedPackage && <span className="text-muted-foreground"> ({selectedPackage.name})</span>}
-                    {date && <span className="text-muted-foreground"> · {slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label}</span>}
+                    {date && <span className="text-muted-foreground"> · {slot === "fullday" ? SLOT_FULLDAY.label : slot === "morning" ? SLOT_MORNING.label : SLOT_EVENING.label}</span>}
                     <span className="text-muted-foreground"> · มัดจำ {deposit.toLocaleString("th-TH")} บาท</span>
                   </p>
                 )}
