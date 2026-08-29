@@ -67,6 +67,12 @@ export default function AdminReviewsPage() {
         })}
       </div>
 
+      {mockReviews.length === 0 && (
+        <Card className="border-dashed p-10 text-center text-muted-foreground">
+          ยังไม่มีรีวิวในระบบ เมื่อลูกค้าส่งรีวิวผ่านหน้าเว็บไซต์ จะปรากฏที่นี่
+        </Card>
+      )}
+
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
@@ -75,7 +81,11 @@ export default function AdminReviewsPage() {
         </CardHeader>
         <CardContent className="text-sm">
           <p className="text-muted-foreground">
-            เฉลี่ย <strong>4.8/5</strong> จากรีวิวที่เผยแพร่ {mockReviews.length} รายการ · รีวิวใหม่ (รอตรวจ) 0 รายการ
+            {mockReviews.length > 0 ? (
+              <>เฉลี่ย <strong>4.8/5</strong> จากรีวิวที่เผยแพร่ {mockReviews.length} รายการ · รีวิวใหม่ (รอตรวจ) 0 รายการ</>
+            ) : (
+              <>ยังไม่มีรีวิวที่บันทึกในระบบ (0 รายการ)</>
+            )}
           </p>
         </CardContent>
       </Card>

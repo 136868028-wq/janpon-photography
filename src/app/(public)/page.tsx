@@ -291,22 +291,45 @@ export default function HomePage() {
 
       {/* Reviews preview */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-        <SectionHeading eyebrow="เสียงจากลูกค้า" title="ลูกค้าไว้วางใจเราในทุกงาน" />
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {mockReviews.slice(0, 3).map((review) => (
-            <Card key={review.id}>
-              <CardContent className="p-5">
-                <div className="flex text-sm text-amber-500" aria-label={`${review.rating} ดาว`}>
-                  {"★".repeat(review.rating)}
-                  <span className="text-muted-foreground/40">{"★".repeat(5 - review.rating)}</span>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-foreground/90">“{review.comment}”</p>
-                <p className="mt-4 text-xs font-semibold">{review.customerName}</p>
-                <p className="text-xs text-muted-foreground">{review.service}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <SectionHeading
+          eyebrow="เสียงจากลูกค้า"
+          title="ลูกค้าไว้วางใจเราในทุกงาน"
+          subtitle="ร่วมแบ่งปันความประทับใจและให้คะแนนดาวกับ Star X-Press Photo Studio"
+        />
+        {mockReviews.length > 0 ? (
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {mockReviews.slice(0, 3).map((review) => (
+              <Card key={review.id}>
+                <CardContent className="p-5">
+                  <div className="flex text-sm text-amber-500" aria-label={`${review.rating} ดาว`}>
+                    {"★".repeat(review.rating)}
+                    <span className="text-muted-foreground/40">{"★".repeat(5 - review.rating)}</span>
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/90">“{review.comment}”</p>
+                  <p className="mt-4 text-xs font-semibold">{review.customerName}</p>
+                  <p className="text-xs text-muted-foreground">{review.service}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 rounded-2xl border bg-sand/40 p-8 text-center sm:p-10">
+            <div className="flex justify-center text-amber-400 text-xl tracking-widest">
+              ★★★★★
+            </div>
+            <h3 className="mt-3 font-heading text-lg font-bold">ร่วมเป็นคนแรกที่เขียนรีวิวให้เรา!</h3>
+            <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+              เคยใช้บริการกับเราแล้วใช่ไหม? แบ่งปันความประทับใจและให้คะแนนดาวเพื่อช่วยให้ลูกค้าท่านอื่นตัดสินใจได้ง่ายขึ้น
+            </p>
+            <div className="mt-5">
+              <Link href="/reviews">
+                <Button size="lg" className="h-10 bg-brand text-brand-fg hover:bg-brand-strong font-semibold">
+                  เขียนรีวิวและให้คะแนนดาว <ArrowRight className="size-4 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* FAQ preview */}

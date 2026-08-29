@@ -327,14 +327,7 @@ export type MockReview = {
   date: string;
 };
 
-export const mockReviews: MockReview[] = [
-  { id: "rv-1", customerName: "นิ้ง นภัสสร", service: "ถ่ายรับปริญญา", rating: 5, comment: "ช่างถ่ายเก่งมาก ถ่ายออกมาสวยทุกใบ ยิ้มให้กับทาง่าย ครอบครัวชอบมากค่ะ", date: "2026-07-25" },
-  { id: "rv-2", customerName: "พี่โอ๊ต", service: "ถ่ายงานแต่งงาน", rating: 5, comment: "ราคาเหมาะสมกับคุณภาพ ได้ไฟล์ครบตามแพ็กเกจ แก้ไขรูปไวมาก", date: "2026-07-18" },
-  { id: "rv-3", customerName: "เจนนิเฟอร์", service: "ถ่ายพอร์ต", rating: 5, comment: "ได้พอร์ตสวยติดมหาลัยเลย ขอบคุณพี่ช่างที่แนะนำท่าทางเก่งมาก", date: "2026-07-10" },
-  { id: "rv-4", customerName: "บอส ปรเมศร์", service: "ถ่ายอีเวนต์", rating: 4, comment: "งานส่งไวมาก ภาพสวย ราคาโอเค รออีกนิดเรื่องการคัดรูปก็คือเพอร์เฟกต์", date: "2026-07-02" },
-  { id: "rv-5", customerName: "ป่าน บุตรี", service: "ถ่ายรับปริญญา", rating: 5, comment: "ตอนแรกไม่มั่นใจ แต่เห็นผลงานแล้วประทับใจมาก แนะนำเพื่อนให้ไปถ่ายต่อเลย", date: "2026-06-27" },
-  { id: "rv-6", customerName: "เพชร รวิภาส", service: "ถ่ายงานแต่งงาน", rating: 5, comment: "ทีมงานมืออาชีพ วางท่าให้ทุกช็อต ภาพออกมาอลังการมาก", date: "2026-06-19" },
-];
+export const mockReviews: MockReview[] = [];
 
 export type MockPhotographer = {
   id: string;
