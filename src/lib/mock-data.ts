@@ -33,7 +33,7 @@ export const portfolioPhotos = {
   portrait2: p("/portfolio/portrait-2.jpg", "พอร์ต"),
   graduation1: p("/portfolio/graduation-1.jpg", "รับปริญญา"),
   graduation2: p("/portfolio/graduation-2.jpg", "รับปริญญา"),
-  event1: p("/portfolio/event-1.jpg", "อีเวนต์"),
+  event1: p("/portfolio/event-1.jpg", "งานอีเวนต์และประชุมสัมมนา"),
   event2: p("/portfolio/event-2.jpg", "อีเวนต์"),
 } satisfies Record<string, MockImage>;
 
@@ -315,7 +315,7 @@ export const mockPortfolio: MockPortfolio[] = [
   { id: "pf-1", title: "งานแต่ง อ้อม & เอิร์ธ", category: "wedding", image: portfolioPhotos.wedding1, date: "2026-07-20" },
   { id: "pf-2", title: "รับปริญญา ม.กรุงเทพ", category: "graduation", image: portfolioPhotos.graduation1, date: "2026-07-12" },
   { id: "pf-3", title: "พอร์ตโมเดล ฟ้า", category: "portfolio", image: portfolioPhotos.portrait1, date: "2026-07-05" },
-  { id: "pf-4", title: "คอนเสิร์ต Night Fest", category: "event", image: portfolioPhotos.event1, date: "2026-06-28" },
+  { id: "pf-4", title: "งานประชุมสัมมนา & อีเวนต์", category: "event", image: portfolioPhotos.event1, date: "2026-06-28" },
   { id: "pf-5", title: "งานแต่ง มิน & เบียร์", category: "wedding", image: portfolioPhotos.wedding2, date: "2026-06-18" },
   { id: "pf-6", title: "รับปริญญา ม.รังสิต", category: "graduation", image: portfolioPhotos.graduation2, date: "2026-06-10" },
   { id: "pf-7", title: "พอร์ตนางแบบ แพรว", category: "portfolio", image: portfolioPhotos.portrait2, date: "2026-05-30" },
