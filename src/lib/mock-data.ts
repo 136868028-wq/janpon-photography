@@ -52,12 +52,8 @@ export function getDepositQr(serviceSlugOrName?: string, depositAmount?: number)
   if (depositAmount === 5000) {
     return depositQrs.weddingPremium;
   }
-  if (
-    depositAmount === 1000 ||
-    serviceSlugOrName === "wedding" ||
-    serviceSlugOrName === "ถ่ายงานแต่งงาน"
-  ) {
-    return depositQrs.wedding;
+  if (depositAmount === 500) {
+    return depositQrs.gradAndPort;
   }
   if (
     depositAmount === 1500 ||
@@ -66,7 +62,14 @@ export function getDepositQr(serviceSlugOrName?: string, depositAmount?: number)
   ) {
     return depositQrs.event;
   }
-  // Default to Graduation & Portrait (500 บาท)
+  if (
+    depositAmount === 1000 ||
+    serviceSlugOrName === "wedding" ||
+    serviceSlugOrName === "ถ่ายงานแต่งงาน"
+  ) {
+    return depositQrs.wedding;
+  }
+  // Default to 500 บาท QR (Graduation, Portrait & Wedding Half-day)
   return depositQrs.gradAndPort;
 }
 
@@ -88,12 +91,12 @@ export const mockServices: MockService[] = [
     id: "svc-wedding",
     name: "ถ่ายงานแต่งงาน",
     slug: "wedding",
-    description: "บันทึกทุกโมเมนต์สำคัญของวันสำคัญ — พิธีเช้า พิธีเย็น รอบสตูดิโอ พร้อมอัลบั้มพรีเมียม",
+    description: "บันทึกทุกโมเมนต์สำคัญของวันสำคัญ — ครึ่งวัน เต็มวัน พรีเมียม พร้อมอัลบั้มและบริการถ่ายนอกสถานที่",
     image: portfolioPhotos.wedding1,
-    basePrice: 12000,
-    deposit: 1000,
+    basePrice: 3500,
+    deposit: 500,
     durationMinutes: 240,
-    tags: ["ช่าง 2-3 ทีม", "ไฟล์ดิจิทัลครบชุด", "อัลบั้มพรีเมียม"],
+    tags: ["ช่าง 1-3 ทีม", "ไฟล์แต่งสีครบชุด", "บริการถ่ายนอกสถานที่"],
     badge: "ยอดนิยมสำหรับคู่รัก",
   },
   {
@@ -150,12 +153,17 @@ export const mockPackages: MockPackage[] = [
   {
     id: "pkg-wed-1",
     serviceSlug: "wedding",
-    name: "แพ็กเกจพิธีเช้า",
-    description: "ถ่ายพิธีเช้า + ครอบครัวหน้าโบสถ์",
-    price: 12000,
-    deposit: 1000,
-    durationMinutes: 180,
-    deliverables: ["ช่าง 1 ทีม", "ไฟล์แต่งสี 150 รูป", "อัลบั้ม 8x8"],
+    name: "แพ็กเกจครึ่งวัน",
+    description: "ช่าง 1 คน ถ่ายได้ไม่จำกัด ปรับแสงสีสวยให้ทุกภาพ บริการถ่ายนอกสถานที่",
+    price: 3500,
+    deposit: 500,
+    durationMinutes: 240,
+    deliverables: [
+      "ช่าง 1 คน",
+      "ถ่ายได้ไม่จำกัด",
+      "ปรับแสงสีสวยให้ทุกภาพ",
+      "บริการถ่ายนอกสถานที่",
+    ],
   },
   {
     id: "pkg-wed-2",

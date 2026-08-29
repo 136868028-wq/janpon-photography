@@ -80,7 +80,7 @@ export default function AdminSettingsPage() {
                   <div className="inline-flex rounded-full bg-blue-500/10 px-2 py-0.5 text-[11px] font-bold text-blue-600 dark:text-blue-400">
                     รูปที่ 1 · 500 บาท
                   </div>
-                  <p className="text-xs font-semibold">ถ่ายรับปริญญา & ถ่ายพอร์ต</p>
+                  <p className="text-xs font-semibold">รับปริญญา, พอร์ต & แต่งงานครึ่งวัน</p>
                   <div className="mx-auto w-28">
                     <ImageMock
                       image={depositQrs.gradAndPort}
