@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
+  Camera,
   CheckCircle2,
   Clock,
   Download,
@@ -13,6 +14,7 @@ import {
   ShieldCheck,
   Sparkles,
   Upload,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,6 +52,7 @@ function BookWizard() {
   const [date, setDate] = useState<string | null>(() => searchParams.get("date"));
   const [slot, setSlot] = useState<string | null>(null);
   const [customer, setCustomer] = useState({ fullName: "", phone: "", email: "", lineUserId: "", note: "" });
+  const [photoConsent, setPhotoConsent] = useState<boolean | null>(null);
   const [paid, setPaid] = useState(false);
 
   const service = mockServices.find((s) => s.id === serviceId)!;
@@ -66,9 +69,9 @@ function BookWizard() {
   const canContinue = useMemo(() => {
     if (step === 1) return true;
     if (step === 2) return Boolean(date && slot);
-    if (step === 3) return customer.fullName.trim().length > 0 && customer.phone.trim().length >= 9;
+    if (step === 3) return customer.fullName.trim().length > 0 && customer.phone.trim().length >= 9 && photoConsent !== null;
     return true;
-  }, [step, date, slot, customer]);
+  }, [step, date, slot, customer, photoConsent]);
 
   const bookingCode = "JN4M8T2W";
   const totalPrice = selectedPackage ? selectedPackage.price : service.basePrice;
@@ -273,6 +276,66 @@ function BookWizard() {
                     <Label htmlFor="bk-note">หมายเหตุเพิ่มเติม <span className="text-muted-foreground">(ไม่บังคับ)</span></Label>
                     <Textarea id="bk-note" rows={3} placeholder="เช่น ต้องการถ่ายที่บ้านก่อน ใส่ชุดไทย 2 ชุด..." value={customer.note} onChange={(e) => setCustomer({ ...customer, note: e.target.value })} />
                   </div>
+
+                  {/* Photo Consent Box */}
+                  <div className="rounded-2xl border-2 border-brand/40 bg-card p-4 sm:p-5 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand/15 text-brand-strong">
+                        <Camera className="size-4" />
+                      </span>
+                      <div className="space-y-2">
+                        <h3 className="font-heading text-sm font-bold text-foreground">
+                          ข้อตกลงการนำภาพไปใช้แสดงผลงาน (Photo Consent)
+                        </h3>
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          ท่านยินยอมให้ <strong className="text-foreground">ร้าน STAR EXPRESS</strong> นำภาพที่ท่านปรากฏอยู่ไปใช้เพื่อแสดงผลงาน ผ่านช่องทาง
+                        </p>
+                        <ul className="list-inside list-disc text-xs font-semibold text-foreground/90 pl-1 space-y-1">
+                          <li>Facebook Page</li>
+                          <li>Instagram</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-2 gap-3 border-t pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setPhotoConsent(true)}
+                        aria-pressed={photoConsent === true}
+                        className={cn(
+                          "flex items-center justify-center gap-2 rounded-xl border-2 py-3 px-4 text-sm font-bold transition-all",
+                          photoConsent === true
+                            ? "border-emerald-600 bg-emerald-500/15 text-emerald-700 ring-2 ring-emerald-500/30 dark:bg-emerald-950/50 dark:text-emerald-300"
+                            : "border-border bg-background text-muted-foreground hover:border-emerald-600/50 hover:text-foreground",
+                        )}
+                      >
+                        <CheckCircle2 className={cn("size-4", photoConsent === true ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground")} />
+                        ยินยอม
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPhotoConsent(false)}
+                        aria-pressed={photoConsent === false}
+                        className={cn(
+                          "flex items-center justify-center gap-2 rounded-xl border-2 py-3 px-4 text-sm font-bold transition-all",
+                          photoConsent === false
+                            ? "border-rose-500 bg-rose-500/15 text-rose-700 ring-2 ring-rose-500/30 dark:bg-rose-950/50 dark:text-rose-300"
+                            : "border-border bg-background text-muted-foreground hover:border-rose-500/50 hover:text-foreground",
+                        )}
+                      >
+                        <X className={cn("size-4", photoConsent === false ? "text-rose-600 dark:text-rose-400" : "text-muted-foreground")} />
+                        ไม่ยินยอม
+                      </button>
+                    </div>
+
+                    {photoConsent === null && (
+                      <p className="mt-2.5 text-center text-[11px] font-medium text-amber-600 dark:text-amber-400">
+                        * กรุณาคลิกเลือก “ยินยอม” หรือ “ไม่ยินยอม” ก่อนดำเนินการต่อ
+                      </p>
+                    )}
+                  </div>
+
                   <p className="rounded-lg bg-muted/70 p-3 text-xs leading-relaxed text-muted-foreground">
                     <ShieldCheck className="mr-1 inline size-3.5 text-emerald-600" />
                     ข้อมูลของคุณถูกเก็บเป็นความลับ ตามนโยบายความเป็นส่วนตัว (PDPA) —{" "}
@@ -295,6 +358,7 @@ function BookWizard() {
                     ["เบอร์โทร", customer.phone],
                     ["อีเมล", customer.email || "-"],
                     ["LINE", customer.lineUserId || "-"],
+                    ["การยินยอมแสดงผลงาน", photoConsent ? "✓ ยินยอม (Facebook & Instagram)" : "✕ ไม่ยินยอม"],
                     ["หมายเหตุ", customer.note || "-"],
                   ].map(([k, v]) => (
                     <div key={k} className="flex items-start justify-between gap-4 px-4 py-3">
