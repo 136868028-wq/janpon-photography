@@ -41,8 +41,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         </div>
 
         <div className="relative z-10 mx-auto max-w-6xl px-4">
-          <Link href="/services" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white">
-            <ArrowLeft className="size-4" /> บริการทั้งหมด
+          <Link href="/packages" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white">
+            <ArrowLeft className="size-4" /> ดูแพ็กเกจทั้งหมด
           </Link>
           <div className="mt-6 grid items-start gap-8 lg:grid-cols-2">
             <div>

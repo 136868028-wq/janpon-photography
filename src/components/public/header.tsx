@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/services", label: "บริการ" },
-  { href: "/packages", label: "แพ็กเกจ" },
+  { href: "/packages", label: "แพ็กเกจและราคา" },
   { href: "/portfolio", label: "ผลงาน" },
   { href: "/reviews", label: "รีวิว" },
   { href: "/about", label: "เกี่ยวกับเรา" },

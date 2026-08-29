@@ -4,20 +4,20 @@ import { BUSINESS } from "@/constants/booking";
 
 const COLUMNS = [
   {
-    title: "บริการ",
+    title: "แพ็กเกจและราคา",
     links: [
-      { href: "/services/wedding", label: "ถ่ายงานแต่งงาน" },
-      { href: "/services/graduation", label: "ถ่ายรับปริญญา" },
-      { href: "/services/portfolio", label: "ถ่ายพอร์ต" },
-      { href: "/services/event", label: "ถ่ายอีเวนต์" },
+      { href: "/packages", label: "แพ็กเกจงานแต่งงาน" },
+      { href: "/packages", label: "แพ็กเกจรับปริญญา" },
+      { href: "/packages", label: "แพ็กเกจถ่ายพอร์ต" },
+      { href: "/packages", label: "แพ็กเกจงานอีเวนต์" },
     ],
   },
   {
     title: "เว็บไซต์",
     links: [
       { href: "/availability", label: "ตรวจวันว่าง" },
-      { href: "/packages", label: "แพ็กเกจ" },
-      { href: "/portfolio", label: "ผลงาน" },
+      { href: "/packages", label: "แพ็กเกจและราคา" },
+      { href: "/portfolio", label: "ผลงานตัวอย่าง" },
       { href: "/my-booking", label: "ค้นหาการจอง" },
     ],
   },

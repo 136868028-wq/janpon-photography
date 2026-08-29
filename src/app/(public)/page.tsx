@@ -103,9 +103,9 @@ export default function HomePage() {
               มัดจำเริ่มต้น 500 บาท · เช็ควันว่างและจองคิวออนไลน์ได้ตลอด 24 ชั่วโมง
             </p>
           </div>
-          <Link href="/services" className="shrink-0">
+          <Link href="/packages" className="shrink-0">
             <Button variant="outline" className="h-9 gap-1.5 text-xs font-semibold sm:h-10 sm:text-sm">
-              ดูบริการและแพ็กเกจทั้งหมด <ArrowRight className="size-4" />
+              ดูแพ็กเกจทั้งหมด <ArrowRight className="size-4" />
             </Button>
           </Link>
         </div>
