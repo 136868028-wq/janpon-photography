@@ -312,15 +312,10 @@ export type MockPortfolio = {
 };
 
 export const mockPortfolio: MockPortfolio[] = [
-  { id: "pf-1", title: "งานแต่ง อ้อม & เอิร์ธ", category: "wedding", image: portfolioPhotos.wedding1, date: "2026-07-20" },
-  { id: "pf-2", title: "รับปริญญา ม.กรุงเทพ", category: "graduation", image: portfolioPhotos.graduation1, date: "2026-07-12" },
-  { id: "pf-3", title: "พอร์ตโมเดล ฟ้า", category: "portfolio", image: portfolioPhotos.portrait1, date: "2026-07-05" },
-  { id: "pf-4", title: "งานประชุมสัมมนา & อีเวนต์", category: "event", image: portfolioPhotos.event1, date: "2026-06-28" },
-  { id: "pf-5", title: "งานแต่ง มิน & เบียร์", category: "wedding", image: portfolioPhotos.wedding2, date: "2026-06-18" },
-  { id: "pf-6", title: "รับปริญญา ม.รังสิต", category: "graduation", image: portfolioPhotos.graduation2, date: "2026-06-10" },
-  { id: "pf-7", title: "พอร์ตนางแบบ แพรว", category: "portfolio", image: portfolioPhotos.portrait2, date: "2026-05-30" },
-  { id: "pf-8", title: "เปิดตัวสินค้าใหม่", category: "event", image: portfolioPhotos.event2, date: "2026-05-22" },
-  { id: "pf-9", title: "แต่งงานหมู่ บาบิลอน", category: "wedding", image: mockImages.wedding, date: "2026-05-14" },
+  { id: "pf-1", title: "ผลงานถ่ายงานแต่งงาน", category: "wedding", image: portfolioPhotos.wedding1, date: "2026-07-20" },
+  { id: "pf-2", title: "ผลงานถ่ายรับปริญญา", category: "graduation", image: portfolioPhotos.graduation1, date: "2026-07-12" },
+  { id: "pf-3", title: "ผลงานถ่ายพอร์ต", category: "portfolio", image: portfolioPhotos.portrait1, date: "2026-07-05" },
+  { id: "pf-4", title: "ผลงานถ่ายอีเวนต์", category: "event", image: portfolioPhotos.event1, date: "2026-06-28" },
 ];
 
 export type MockReview = {

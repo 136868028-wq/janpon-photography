@@ -31,7 +31,7 @@ export default function AdminPortfolioPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="wedding">
+      <Tabs defaultValue="all">
         <TabsList>
           <TabsTrigger value="wedding">งานแต่งงาน ({catCount("wedding")})</TabsTrigger>
           <TabsTrigger value="graduation">รับปริญญา ({catCount("graduation")})</TabsTrigger>
