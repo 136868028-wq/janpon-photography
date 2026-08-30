@@ -40,13 +40,30 @@ export default function LoginPage() {
 
     setLoadingCustomer(true);
     try {
-      // Save session to localStorage
+      // 1. Query Supabase for bookings matching this phone
+      const res = await getCustomerBookingsByPhoneAction(cleanPhone);
+      const matched = res.success ? res.bookings || [] : [];
+
+      let finalName = customerName.trim();
+      if (!finalName && matched.length > 0) {
+        finalName = matched[0].customer_name;
+      }
+
+      // 2. Save session to localStorage
       const userSession = {
         phone: cleanPhone,
-        fullName: customerName.trim() || `ลูกค้า (${cleanPhone})`,
+        fullName: finalName || `ลูกค้า (${cleanPhone})`,
         loggedInAt: new Date().toISOString(),
       };
       localStorage.setItem("starxpress_customer", JSON.stringify(userSession));
+
+      // 3. Save matching booking codes to starxpress_my_codes
+      const codes = matched.map((b: any) => b.code);
+      if (codes.length > 0) {
+        const oldCodes = JSON.parse(localStorage.getItem("starxpress_my_codes") || "[]");
+        const merged = Array.from(new Set([...codes, ...oldCodes]));
+        localStorage.setItem("starxpress_my_codes", JSON.stringify(merged));
+      }
 
       // Redirect to Profile
       router.push("/profile");

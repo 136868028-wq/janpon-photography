@@ -21,8 +21,9 @@ export async function createBookingAction(input: CreateBookingInput) {
   try {
     const supabase = await createServerSupabaseClient();
 
-    // Clean phone number (e.g. 0812345678)
-    const cleanPhone = input.customerPhone.trim().replace(/[^0-9]/g, "");
+    // Clean phone digits (e.g. 0812345678)
+    const rawPhone = input.customerPhone.trim();
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
 
     // Generate Parcel-style Tracking Code (e.g. STX-26894K)
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -45,7 +46,7 @@ export async function createBookingAction(input: CreateBookingInput) {
         deposit_amount: input.depositAmount,
         status: "holding",
         customer_name: input.customerName.trim(),
-        customer_phone: cleanPhone || input.customerPhone.trim(),
+        customer_phone: cleanPhone || rawPhone,
         customer_email: input.customerEmail?.trim() || null,
         customer_line: input.customerLine?.trim() || null,
         customer_note: input.customerNote?.trim() || null,
@@ -83,7 +84,7 @@ export async function getBookingByCodeAction(code: string) {
     const { data, error } = await supabase
       .from("bookings")
       .select("*, payments(*)")
-      .eq("code", cleanCode)
+      .ilike("code", cleanCode)
       .maybeSingle();
 
     if (error) return { success: false, error: error.message };
@@ -98,8 +99,9 @@ export async function getBookingByCodeAction(code: string) {
 export async function getCustomerBookingsByPhoneAction(phone: string) {
   try {
     const supabase = await createServerSupabaseClient();
-    const cleanDigits = phone.replace(/[^0-9]/g, "");
+    const cleanDigits = phone.trim().replace(/[^0-9]/g, "");
 
+    // Fetch all bookings from Supabase
     const { data, error } = await supabase
       .from("bookings")
       .select("*, payments(*)")
@@ -110,35 +112,16 @@ export async function getCustomerBookingsByPhoneAction(phone: string) {
     const matched = (data || []).filter((b: any) => {
       const bDigits = (b.customer_phone || "").replace(/[^0-9]/g, "");
       if (!bDigits || !cleanDigits) return false;
-      const last8 = cleanDigits.length >= 8 ? cleanDigits.slice(-8) : cleanDigits;
-      const bLast8 = bDigits.length >= 8 ? bDigits.slice(-8) : bDigits;
-
       return (
         bDigits === cleanDigits ||
         bDigits.includes(cleanDigits) ||
         cleanDigits.includes(bDigits) ||
-        (last8 && bDigits.includes(last8)) ||
-        (bLast8 && cleanDigits.includes(bLast8))
+        (cleanDigits.length >= 6 && bDigits.endsWith(cleanDigits.slice(-6))) ||
+        (bDigits.length >= 6 && cleanDigits.endsWith(bDigits.slice(-6)))
       );
     });
 
     return { success: true, bookings: matched };
-  } catch (err: any) {
-    return { success: false, error: err?.message, bookings: [] };
-  }
-}
-
-export async function getAllRecentPublicBookingsAction() {
-  try {
-    const supabase = await createServerSupabaseClient();
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("id, code, customer_name, customer_phone, service_name, date, slot, status, deposit_amount, created_at")
-      .order("created_at", { ascending: false })
-      .limit(6);
-
-    if (error) return { success: false, error: error.message, bookings: [] };
-    return { success: true, bookings: data || [] };
   } catch (err: any) {
     return { success: false, error: err?.message, bookings: [] };
   }

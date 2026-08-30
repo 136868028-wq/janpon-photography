@@ -89,7 +89,7 @@ function BookWizard() {
   const canContinue = useMemo(() => {
     if (step === 1) return true;
     if (step === 2) return Boolean(date && slot);
-    if (step === 3) return Boolean(customer.fullName.trim() && customer.phone.trim() && photoConsent !== null);
+    if (step === 3) return customer.fullName.trim().length > 0 && customer.phone.trim().length >= 9 && photoConsent !== null;
     return true;
   }, [step, date, slot, customer, photoConsent]);
 
@@ -142,16 +142,9 @@ function BookWizard() {
           } catch {
             // ignore
           }
-        } else {
-          alert("ไม่สามารถบันทึกการจองได้: " + (res.error || "กรุณาลองใหม่อีกครั้ง"));
-          setIsSubmitting(false);
-          return;
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error("Booking error:", err);
-        alert("เกิดข้อผิดพลาด: " + (err?.message || "ไม่สามารถเชื่อมต่อฐานข้อมูลได้"));
-        setIsSubmitting(false);
-        return;
       } finally {
         setIsSubmitting(false);
       }
